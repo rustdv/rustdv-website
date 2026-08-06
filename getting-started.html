@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Getting Started — rustdv</title>
+<meta name="description" content="Install rustdv, write a first testbench in three small files, and run it on Icarus Verilog — then run the complete TinyALU testbench.">
+<link rel="icon" type="image/png" href="assets/rustdv-logo.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img src="assets/rustdv-logo.png" alt="rustdv logo">
+      rustdv
+    </a>
+    <nav class="site-nav">
+      <a href="getting-started.html">Getting Started</a>
+      <a href="introduction.html">Introduction</a>
+      <a href="translations.html">UVM Translations</a>
+      <a href="https://github.com/rustdv/rustdv">GitHub</a>
+      <a class="nav-cta" href="book/index.html">Read the Book</a>
+      <a class="nav-coffee" href="https://buymeacoffee.com/raysalemi" title="Buy Me a Coffee">&#9749;</a>
+    </nav>
+  </div>
+</header>
+
+<main class="article">
+
+<h1>Getting Started</h1>
+<p class="subtitle">A first testbench in three small files, running on a free
+simulator — then the complete TinyALU testbench.</p>
+
+<h2>Prerequisites</h2>
+
+<p>You need two tools, both free:</p>
+
+<ul>
+  <li><strong>The Rust toolchain.</strong> Install it with
+      <a href="https://rustup.rs">rustup</a>; you get <code>cargo</code>, the
+      build tool every command below uses.</li>
+  <li><strong>Icarus Verilog</strong> (<code>iverilog</code> and
+      <code>vvp</code>). On Ubuntu/Debian: <code>apt install iverilog</code>.
+      On macOS: <code>brew install icarus-verilog</code>. Or build it from
+      <a href="https://github.com/steveicarus/iverilog">source</a>.</li>
+</ul>
+
+<p>No Python, no interpreter, no virtual environment. A rustdv testbench is a
+native library the simulator loads directly.</p>
+
+<h2>Hello, simulator</h2>
+
+<p>A rustdv testbench is an ordinary Rust library crate, and three small files
+make a running one. Start with the layout:</p>
+
+<pre><code>mkdir -p hello_tb/src
+cd hello_tb</code></pre>
+
+<p>First, <code>Cargo.toml</code> — the one line that matters is
+<code>crate-type</code>, which tells cargo to build a shared library the
+simulator can load:</p>
+
+<pre><code># Cargo.toml
+[package]
+name = "hello_tb"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+path = "src/hello_tb.rs"     # the crate root, named after the crate
+crate-type = ["cdylib"]      # a shared library, loaded by the simulator
+
+[dependencies]
+rustdv = "0.1"               # or run: cargo add rustdv</code></pre>
+
+<p>Second, the testbench itself, in <code>src/hello_tb.rs</code>:</p>
+
+<pre><code>// src/hello_tb.rs
+use rustdv::prelude::*;
+
+rustdv::vpi_bootstrap!();    // exports the entry points the simulator loads
+
+#[rustdv::test]
+async fn hello(ctx: RustdvCtx) -&gt; Result&lt;(), TestError&gt; {
+    let dut = ctx.dut();
+    let clk = dut.signal("clk")?;
+    for _ in 0..3 {
+        clk.rising_edge().await;
+        ctx.info(&amp;format!("saw a rising edge at {} ns", sim_time_ns()));
+    }
+    Ok(())
+}</code></pre>
+
+<p>Read it the way the executor does. <code>#[rustdv::test]</code> registers
+the function with the test runner. The <code>ctx</code> argument is the
+framework, handed to you: the DUT handle, logging, the random source.
+<code>dut.signal("clk")?</code> looks the signal up by name — a typo is an
+<code>Err</code>, not a crash. And <code>clk.rising_edge().await</code> is
+simulated time: the test suspends, the simulator advances, and the executor
+resumes the test at the edge.</p>
+
+<p>Third, something to simulate. The DUT here is just a clock:</p>
+
+<pre><code>// hello.sv
+`timescale 1ns/1ns
+module hello;
+   reg clk = 0;
+   always #5 clk = ~clk;
+endmodule</code></pre>
+
+<h2>Run it</h2>
+
+<p>Build the testbench, give the library the <code>.vpi</code> name the
+simulator expects, compile the DUT, and run:</p>
+
+<pre><code>cargo build --release
+cp target/release/libhello_tb.so hello_tb.vpi     # macOS: libhello_tb.dylib
+iverilog -g2012 -o hello.vvp -s hello hello.sv
+vvp -M . -m hello_tb hello.vvp</code></pre>
+
+<p>The output — this transcript is a real run:</p>
+
+<pre><code>      0.00ns INFO     rustdv: found 1 test(s), RUSTDV_RANDOM_SEED=1786027686
+      0.00ns INFO     running hello (1/1)  [src/hello_tb.rs:5]
+      5.00ns INFO     [hello]: saw a rising edge at 5 ns
+     15.00ns INFO     [hello]: saw a rising edge at 15 ns
+     25.00ns INFO     [hello]: saw a rising edge at 25 ns
+     25.00ns INFO     hello PASSED
+******************************************************************************
+** TEST                                       STATUS  SIM TIME (ns)      **
+******************************************************************************
+** hello                                        PASS          25.00      **
+******************************************************************************
+REGRESSION: PASS</code></pre>
+
+<p>That is the whole loop: no testbench module in the Verilog — rustdv drives
+the top module itself — and no environment to activate. The runner found the
+test, seeded the random source (set <code>RUSTDV_RANDOM_SEED</code> to make a
+run reproducible), ran the test to completion, and printed the regression
+table. If the test returned an <code>Err</code>, the table would say
+<code>FAIL</code> and <code>vvp</code> would exit nonzero — ready for CI.</p>
+
+<h2>The real thing: the TinyALU testbench</h2>
+
+<p>The five-line test above is the mechanics. The point of rustdv is the
+UVM-style testbench built on top of them: environments, agents, a driver and monitors
+connected by TLM, a scoreboard subscribing through analysis ports, sequences
+feeding the driver. The repository ships one, complete, for the TinyALU:</p>
+
+<pre><code>git clone https://github.com/rustdv/rustdv.git
+cd rustdv
+sim/run_rustdv.sh</code></pre>
+
+<p>It builds the testbench, compiles the DUT, runs randomized and directed
+tests against it, and ends the same way every rustdv run ends:
+<code>REGRESSION: PASS</code> — with every operation covered and every result
+checked against a Rust scoreboard. Zero install works too: open the repository
+in <a href="https://codespaces.new/rustdv/rustdv?quickstart=1">GitHub
+Codespaces</a> and you get Rust, Icarus Verilog, and Verilator ready to run
+everything.</p>
+
+<h2>Where to go next</h2>
+
+<ul>
+  <li><strong><a href="book/interlude-tinyalu-testbench.html">The
+      Interlude</a></strong> — the complete TinyALU testbench in one place,
+      the best single answer to &ldquo;what does rustdv code look
+      like?&rdquo;</li>
+  <li><strong><a href="book/index.html"><em>Rust for RTL
+      Verification</em></a></strong> — the companion book. No prior Rust
+      assumed; forty chapters from the language basics to virtual
+      sequences.</li>
+  <li><strong><a href="introduction.html">What rustdv provides</a></strong> —
+      the complete reference for everything
+      <code>use rustdv::prelude::*</code> brings into scope.</li>
+  <li><strong><a href="translations.html">UVM translation tables</a></strong>
+      — your SystemVerilog UVM or cocotb/pyuvm vocabulary, mapped onto rustdv
+      name by name.</li>
+  <li><strong><a href="https://github.com/rustdv/rustdv/discussions">GitHub
+      Discussions</a></strong> — the front door for everything in 0.1. The
+      repository is not taking pull requests or issues yet; what you found,
+      what you built, and what rustdv should become all belong in the
+      discussion.</li>
+</ul>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-cols">
+      <div>
+        <h4>Learn</h4>
+        <ul>
+          <li><a href="getting-started.html">Getting Started</a></li>
+          <li><a href="book/index.html">The Book</a></li>
+          <li><a href="introduction.html">Introduction to rustdv</a></li>
+          <li><a href="translations.html">UVM Translation Tables</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Project</h4>
+        <ul>
+          <li><a href="https://github.com/rustdv/rustdv">GitHub Repository</a></li>
+          <li><a href="https://github.com/rustdv/rustdv/discussions">GitHub Discussions</a></li>
+          <li><a href="https://crates.io/crates/rustdv">rustdv on crates.io</a></li>
+          <li><a href="https://docs.rs/rustdv">API Documentation (docs.rs)</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>About</h4>
+        <ul>
+          <li><a href="journey.html">Built with Claude</a></li>
+          <li><a href="https://www.uvmprimer.com">The UVM Primer</a></li>
+          <li><a href="https://a.co/d/0hTKAJvh">Python for RTL Verification</a></li>
+          <li><a href="https://buymeacoffee.com/raysalemi">Buy Me a Coffee</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Ray Salemi. rustdv is free and open source.</span>
+      <span>rustdv.org</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

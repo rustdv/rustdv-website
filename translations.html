@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UVM Translation Tables — rustdv</title>
+<meta name="description" content="Python-to-Rust and SystemVerilog-UVM-to-rustdv translation tables, plus the chapter map to The UVM Primer and Python for RTL Verification.">
+<link rel="icon" type="image/png" href="assets/rustdv-logo.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img src="assets/rustdv-logo.png" alt="rustdv logo">
+      rustdv
+    </a>
+    <nav class="site-nav">
+      <a href="getting-started.html">Getting Started</a>
+      <a href="introduction.html">Introduction</a>
+      <a href="translations.html">UVM Translations</a>
+      <a href="https://github.com/rustdv/rustdv">GitHub</a>
+      <a class="nav-cta" href="book/index.html">Read the Book</a>
+      <a class="nav-coffee" href="https://buymeacoffee.com/raysalemi" title="Buy Me a Coffee">&#9749;</a>
+    </nav>
+  </div>
+</header>
+
+<main class="article">
+
+<h1>UVM Translation Tables</h1>
+<p class="subtitle">Your working vocabulary, mapped onto rustdv — whichever language you
+come from. These tables are Appendices B, C, and A of
+<a href="book/index.html"><em>Rust for RTL Verification</em></a>; the Chapter column
+points to where the book teaches each translation.</p>
+
+<h2 id="python">Python → Rust (for cocotb and pyuvm readers)</h2>
+
+<p>For readers coming from cocotb and pyuvm (and <em>Python for RTL
+Verification</em>): the working translations the book uses, gathered for reference.
+SystemVerilog readers want the <a href="#systemverilog">next section</a>, this
+table's twin. Legend: <strong>[C]</strong> cocotb, <strong>[P]</strong> pyuvm.</p>
+
+<h3>Language and runtime</h3>
+<div class="table-scroll">
+<table>
+<thead><tr><th>Python</th><th>Rust</th><th>Chapter</th></tr></thead>
+<tbody>
+<tr><td><code>async def</code> coroutine, resumed via <code>send(None)</code></td><td><code>async fn</code> → <code>Future</code>, resumed via <code>poll()</code></td><td>15</td></tr>
+<tr><td><code>@cocotb.test()</code></td><td><code>#[rustdv::test]</code></td><td>15, 21</td></tr>
+<tr><td>exceptions fail the test</td><td><code>Result&lt;(), TestError&gt;</code>; panics = testbench bugs</td><td>9, 18</td></tr>
+<tr><td><code>cocotb.start_soon(coro)</code></td><td><code>spawn(future) -&gt; TaskHandle&lt;T&gt;</code></td><td>16</td></tr>
+<tr><td><code>await task</code></td><td><code>task.await</code> → <code>Result&lt;T, TaskError&gt;</code></td><td>16</td></tr>
+<tr><td><code>task.kill()</code></td><td><code>handle.cancel()</code> — the future is dropped; cleanup in <code>Drop</code></td><td>16</td></tr>
+<tr><td><code>Combine(...)</code> / <code>First(...)</code></td><td><code>join2</code>/<code>join!</code> / <code>first2</code>/<code>first!</code></td><td>16</td></tr>
+<tr><td><code>try/except QueueFull</code></td><td><code>try_put</code> → <code>Result&lt;(), T&gt;</code> (rejected item handed back)</td><td>16, 31</td></tr>
+<tr><td>decorator registration at import time</td><td>link-section registration at compile time</td><td>21</td></tr>
+<tr><td>metaclass class registration</td><td>not needed — constructor injection</td><td>21, 29</td></tr>
+<tr><td><code>getattr(obj, name)</code> dispatch</td><td>pass the function/closure itself</td><td>33</td></tr>
+<tr><td><code>logging</code> levels + handlers</td><td><code>log::</code> levels, <code>set_level_for(prefix)</code>, <code>log_to_file</code></td><td>26</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>cocotb layer</h3>
+<div class="table-scroll">
+<table>
+<thead><tr><th>Python (cocotb)</th><th>Rust (rustdv-sim)</th><th>Chapter</th></tr></thead>
+<tbody>
+<tr><td><code>Timer(2, units=&quot;ns&quot;)</code></td><td><code>Timer::ns(2).await</code></td><td>15</td></tr>
+<tr><td><code>RisingEdge(sig)</code> / <code>FallingEdge(sig)</code></td><td><code>sig.rising_edge().await</code> / <code>sig.falling_edge().await</code></td><td>17</td></tr>
+<tr><td><code>ClockCycles(clk, n)</code></td><td><code>for _ in 0..n { clk.rising_edge().await; }</code></td><td>17</td></tr>
+<tr><td><code>dut.sig</code> attribute magic</td><td><code>dut.signal(&quot;sig&quot;)?</code> → <code>Result&lt;LogicHandle, _&gt;</code></td><td>17</td></tr>
+<tr><td><code>sig.value = x</code> / <code>int(sig.value)</code></td><td><code>sig.set_u64(x)</code> / <code>sig.get_u64()?</code></td><td>17</td></tr>
+<tr><td><code>Clock(dut.clk, 10, units=&quot;ns&quot;).start()</code></td><td><code>Clock::new(&amp;clk, SimDuration::ns(10)).start()</code></td><td>17</td></tr>
+<tr><td><code>cocotb.queue.Queue(maxsize=1)</code></td><td><code>Queue::new(Some(1))</code>; <code>Queue::unbounded()</code></td><td>16</td></tr>
+<tr><td><code>Event</code> / <code>Lock</code></td><td><code>sim::Event</code> / <code>sim::Lock</code> (FIFO-fair, RAII guard)</td><td>16</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>pyuvm layer</h3>
+<div class="table-scroll">
+<table>
+<thead><tr><th>Python (pyuvm)</th><th>Rust (rustdv)</th><th>Chapter</th></tr></thead>
+<tbody>
+<tr><td><code>@pyuvm.test()</code> on a class, <code>uvm_test_top</code></td><td><code>#[rustdv::test]</code> on a struct; the root is named after your test</td><td>23</td></tr>
+<tr><td><code>raise_objection()</code>/<code>drop_objection()</code></td><td><code>ctx.raise_objection(..)</code> → RAII <code>ObjectionGuard</code>; drop releases</td><td>23</td></tr>
+<tr><td><code>uvm_component(name, parent)</code> tree</td><td>children are struct fields; <code>#[derive(Component)]</code>; paths derived</td><td>24</td></tr>
+<tr><td>the nine phases, pyuvm's traversal order</td><td>the nine phases, same order: <code>build</code>, <code>connect</code>, ... <code>final_phase</code></td><td>24</td></tr>
+<tr><td><code>self.logger</code>, <code>[uvm_test_top.comp]</code></td><td><code>ctx.info(..)</code>, same bracket format, path supplied by the walk</td><td>26</td></tr>
+<tr><td><code>ConfigDB().set/get</code>, wildcards, globals</td><td><code>ConfigDb::set/get</code> — same paths, same globs, <code>Result</code> answers</td><td>25, 27</td></tr>
+<tr><td><code>except UVMConfigItemNotFound</code></td><td><code>match</code> on <code>ConfigError::NotFound { .. }</code></td><td>28</td></tr>
+<tr><td>metaclass registration + <code>create()</code></td><td><code>#[derive(Component)]</code> registers; <code>Foo::create_comp()</code></td><td>21, 29</td></tr>
+<tr><td><code>set_type_override_by_type</code></td><td><code>Factory::set_type_override::&lt;A, B&gt;()</code> (also by name, by instance)</td><td>29, 30</td></tr>
+<tr><td>TLM-1 put/get/peek port classes</td><td><code>PutPort</code>/<code>GetPort</code>/<code>PeekPort</code>, wired export-to-port through a <code>TlmFifo</code></td><td>31</td></tr>
+<tr><td><code>UVMTLMConnectionError</code> (lazy, at first use)</td><td>elaboration sweep names every unwired port before run</td><td>31</td></tr>
+<tr><td><code>uvm_analysis_port.write()</code></td><td><code>PublishPort&lt;T&gt;::write(&amp;T)</code> through an <code>AnalysisBus</code> hub</td><td>32</td></tr>
+<tr><td><code>uvm_subscriber</code> (one <code>write</code> per class)</td><td>a <code>Subscriber&lt;T&gt;</code> impl per stream — two streams, two impls</td><td>32, 34</td></tr>
+<tr><td><code>uvm_tlm_analysis_fifo</code></td><td>absent — the subscriber owns its storage</td><td>32</td></tr>
+<tr><td><code>uvm_object</code> do_copy/do_compare/<code>__str__</code></td><td><code>#[derive(Clone, PartialEq, Debug)]</code> + hand-written <code>Display</code></td><td>35</td></tr>
+<tr><td><code>copy(other)</code> / <code>clone()</code></td><td><code>clone_from(&amp;mut self, src)</code> / <code>clone()</code></td><td>35</td></tr>
+<tr><td><code>uvm_sequence.body()</code></td><td><code>impl Sequence</code> — <code>type Req</code>/<code>type Rsp</code>, <code>async fn body(ctx)</code></td><td>36</td></tr>
+<tr><td><code>start_item</code>/<code>finish_item</code></td><td><code>ctx.start_item(&amp;mut req)</code> / <code>ctx.finish_item(req)</code> → ticket</td><td>36</td></tr>
+<tr><td><code>seq_item_port.get_next_item()</code></td><td><code>port.get_next_item().await</code> → <code>SeqItem&lt;REQ&gt;</code></td><td>36</td></tr>
+<tr><td><code>item_done()</code> / <code>item_done(rsp)</code> + <code>set_id_info</code></td><td><code>item_done(None)</code> / <code>item_done(Some(rsp))</code> — auto-tagged</td><td>36, 38</td></tr>
+<tr><td><code>get_response()</code></td><td><code>get_response(Some(ticket))</code> / <code>try_get_response</code> — in order or by ticket</td><td>37, 38</td></tr>
+<tr><td><em>(no pyuvm counterpart)</em> <code>try_next_item</code></td><td><code>try_next_item()</code> → <code>Option</code> — the UVM's non-blocking accept, kept</td><td>37</td></tr>
+<tr><td><code>seq.start(seqr)</code> / <code>start(None)</code> for virtual</td><td><code>seq.start(&amp;seqr)</code> / <code>start_virtual()</code></td><td>36, 39</td></tr>
+<tr><td><code>is_active</code> int from ConfigDB</td><td><code>Active</code> enum from the ConfigDb; a passive env skips building the driver</td><td>40</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="systemverilog">SystemVerilog-UVM → rustdv</h2>
+
+<p>For readers coming from SystemVerilog UVM (and <em>The UVM Primer</em>): where each
+piece of your working vocabulary went. Python readers want the
+<a href="#python">previous section</a>, this table's twin.</p>
+
+<h3>Language level</h3>
+<div class="table-scroll">
+<table>
+<thead><tr><th>SystemVerilog</th><th>Rust</th><th>Chapter</th></tr></thead>
+<tbody>
+<tr><td><code>byte</code>, <code>shortint</code>, <code>int</code></td><td><code>u8</code>/<code>i8</code>, <code>u16</code>/<code>i16</code>, <code>u32</code>/<code>i32</code> — no silent truncation</td><td>3</td></tr>
+<tr><td><code>logic</code> four-state values</td><td><code>Logic</code> enum / <code>LogicArray</code> — no x in arithmetic</td><td>7, 17</td></tr>
+<tr><td><code>typedef enum</code> (an int in disguise)</td><td><code>enum</code> — a real type; exhaustively matched</td><td>7</td></tr>
+<tr><td><code>case</code> + <code>default</code> (+ <code>unique</code> warnings)</td><td><code>match</code> — missing cases are compile errors</td><td>4</td></tr>
+<tr><td><code>class ... extends</code>, <code>virtual</code>, <code>super.new()</code></td><td>traits, default methods, composition + delegation</td><td>10</td></tr>
+<tr><td><code>pure virtual function</code> in a virtual class</td><td>a required trait method, checked at the <code>impl</code></td><td>10</td></tr>
+<tr><td>parameterized class <code>#(type T = int)</code></td><td>generics <code>&lt;T: Bound&gt;</code>, checked at definition</td><td>11</td></tr>
+<tr><td><code>class ... #(type REQ, type RSP = REQ)</code></td><td><code>SeqItemPort&lt;REQ, RSP = REQ&gt;</code> — same convention</td><td>11</td></tr>
+<tr><td><code>local</code> / <code>protected</code></td><td>private-by-default, <code>pub</code> to export</td><td>14</td></tr>
+<tr><td><code>null</code> handle, <code>$cast</code></td><td><code>Option&lt;T&gt;</code>, exhaustive <code>match</code> — no null, no cast</td><td>9</td></tr>
+<tr><td>status flags and sentinel returns</td><td><code>Result&lt;T, E&gt;</code> + <code>?</code> — failure in the signature</td><td>9</td></tr>
+<tr><td><code>$sformatf</code></td><td><code>format!</code></td><td>8</td></tr>
+<tr><td><code>fork</code> / <code>join_none</code> / <code>disable</code></td><td><code>spawn(future)</code> → <code>TaskHandle</code>; <code>handle.cancel()</code></td><td>16</td></tr>
+<tr><td><code>forever</code></td><td><code>loop</code> (an expression — it can <code>break</code> with a value)</td><td>4</td></tr>
+<tr><td><code>mailbox #(T)</code>, <code>try_put</code>/<code>try_get</code></td><td><code>sim::Queue&lt;T&gt;</code> — same names, <code>Result</code>/<code>Option</code> answers</td><td>16</td></tr>
+<tr><td>named <code>event</code>, <code>-&gt;done</code>, <code>@(done)</code></td><td><code>sim::Event</code> — <code>set()</code> / <code>wait().await</code></td><td>16</td></tr>
+<tr><td><code>semaphore</code> (one key)</td><td><code>sim::Lock</code> — FIFO-fair, RAII guard</td><td>16</td></tr>
+<tr><td><code>@(posedge clk)</code>, <code>#2ns</code></td><td><code>clk.rising_edge().await</code>, <code>Timer::ns(2).await</code></td><td>15, 17</td></tr>
+<tr><td><code>`define</code>-style codegen (<code>`uvm_*_utils</code>)</td><td>attribute + derive macros — syntax trees, not text</td><td>21</td></tr>
+<tr><td>package + <code>.f</code> file + vendor tarball</td><td>crate + <code>Cargo.toml</code> + crates.io</td><td>14</td></tr>
+<tr><td><em>(no equivalent)</em></td><td><code>cargo test</code> — unit tests with no simulator</td><td>14</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Methodology level</h3>
+<div class="table-scroll">
+<table>
+<thead><tr><th>SystemVerilog UVM</th><th>rustdv</th><th>Chapter</th></tr></thead>
+<tbody>
+<tr><td><code>class my_test extends uvm_test</code> + <code>run_test()</code></td><td><code>#[rustdv::test]</code> on a struct; the runner drives its phases</td><td>23</td></tr>
+<tr><td><code>phase.raise_objection(this)</code> / <code>drop_objection</code></td><td><code>ctx.raise_objection(..)</code> → RAII <code>ObjectionGuard</code>; drop releases</td><td>23</td></tr>
+<tr><td><code>uvm_component(name, parent)</code> tree</td><td>children are struct fields; <code>#[derive(Component)]</code>; paths derived by the walk</td><td>24</td></tr>
+<tr><td><code>build_phase</code> (top-down) / <code>connect_phase</code> (bottom-up)</td><td><code>fn build(&amp;mut self, ctx)</code> / <code>fn connect(&amp;mut self, ctx)</code> — real phases, same directions</td><td>24</td></tr>
+<tr><td><code>run_phase</code> (objection-gated task)</td><td><code>async fn run</code> — concurrent across the tree; ends when objections drain</td><td>24, 31</td></tr>
+<tr><td>elaboration + post-run phases</td><td>same names; <strong>top-down</strong>, where SV runs them bottom-up</td><td>24</td></tr>
+<tr><td><code>`uvm_info(id, msg, verbosity)</code></td><td><code>ctx.info(..)</code> — same time/level/<code>[path]</code> line format</td><td>26</td></tr>
+<tr><td><code>set_report_verbosity_level_hier()</code></td><td><code>ctx.set_logging_level_hier(..)</code></td><td>26</td></tr>
+<tr><td><code>uvm_config_db#(T)::set/get</code>, wildcards</td><td><code>ConfigDb::set(ctx, glob, key, v)</code> / <code>get</code> → <code>Result</code> — one key, no type in the address</td><td>25, 27</td></tr>
+<tr><td>virtual interface via config database</td><td><code>Rc&lt;TinyAluBfm&gt;</code> in the ConfigDb</td><td>25</td></tr>
+<tr><td>a failed <code>get()</code> (silent <code>return 0</code>)</td><td><code>ConfigError</code> naming which failure; <code>#[must_use]</code></td><td>27, 28</td></tr>
+<tr><td><code>print_config()</code> / <code>+UVM_CONFIG_DB_TRACE</code></td><td><code>ConfigDb::print()</code> / <code>ConfigDb::set_tracing(true)</code></td><td>28</td></tr>
+<tr><td><code>`uvm_component_utils</code> registration</td><td><code>#[derive(Component)]</code> registers by name, universally</td><td>21, 29</td></tr>
+<tr><td><code>type_id::create(&quot;name&quot;, this)</code></td><td><code>Foo::create_comp()</code> — overridable (<code>new_comp()</code> = <code>new</code>, fixed)</td><td>29</td></tr>
+<tr><td><code>set_type_override_by_type</code> / <code>_by_name</code> / instance</td><td><code>Factory::set_type_override::&lt;A, B&gt;()</code> / <code>_by_name</code> / <code>set_inst_override</code></td><td>29, 30</td></tr>
+<tr><td><code>uvm_factory::get().print()</code></td><td><code>Factory::print()</code></td><td>29</td></tr>
+<tr><td>TLM-1 put/get/peek port + export + <code>connect()</code></td><td><code>PutPort</code>/<code>GetPort</code>/<code>PeekPort</code> + <code>fifo.put_export().connect(comp, PORT_NAME)</code></td><td>31</td></tr>
+<tr><td><code>uvm_tlm_fifo</code> (with built-in taps)</td><td><code>TlmFifo&lt;T&gt;</code> (with <code>put_ap()</code>/<code>get_ap()</code>)</td><td>31</td></tr>
+<tr><td><code>try_put()</code> returns a bit</td><td><code>try_put(T)</code> → <code>Result&lt;(), T&gt;</code> — a refused item comes back</td><td>31</td></tr>
+<tr><td>unconnected port found at first use</td><td>elaboration sweep names every unwired port before run</td><td>31</td></tr>
+<tr><td><code>uvm_analysis_port.write()</code></td><td><code>PublishPort&lt;T&gt;::write(&amp;T)</code>, brokered by an <code>AnalysisBus</code> hub</td><td>32</td></tr>
+<tr><td><code>uvm_subscriber</code> (one <code>write</code> per class)</td><td>a <code>Subscriber&lt;T&gt;</code> impl per stream — two streams, two impls, no <code>imp_decl</code></td><td>32, 34</td></tr>
+<tr><td><code>uvm_tlm_analysis_fifo</code> in scoreboards</td><td>absent — the subscriber owns its storage</td><td>32</td></tr>
+<tr><td><code>uvm_agent</code> + <code>is_active</code></td><td>env reads <code>Active</code> from the ConfigDb; a passive env leaves the driver slot empty</td><td>40</td></tr>
+<tr><td><code>do_copy</code> / <code>do_compare</code> / <code>convert2string</code></td><td><code>#[derive(Clone, PartialEq, Debug)]</code> + hand-written <code>Display</code></td><td>10, 35</td></tr>
+<tr><td><code>copy(other)</code> / <code>clone()</code></td><td><code>clone_from(&amp;mut self, src)</code> / <code>clone()</code></td><td>35</td></tr>
+<tr><td><code>uvm_field_*</code> macros (runtime field walking)</td><td><code>derive</code> — the same generation, at compile time</td><td>21, 35</td></tr>
+<tr><td><code>uvm_sequence #(REQ, RSP)</code>, <code>body()</code></td><td><code>impl Sequence</code> — <code>type Req</code>/<code>type Rsp</code>, <code>async fn body(ctx)</code></td><td>36</td></tr>
+<tr><td><code>start_item(req)</code> / <code>finish_item(req)</code></td><td><code>ctx.start_item(&amp;mut req)</code> / <code>ctx.finish_item(req)</code> → ticket</td><td>36</td></tr>
+<tr><td><code>seq_item_port.get_next_item()</code> / <code>item_done()</code></td><td>same names; <code>item_done(Some(rsp))</code> answers</td><td>36, 38</td></tr>
+<tr><td><code>try_next_item()</code> (absent from pyuvm)</td><td><code>try_next_item()</code> → <code>Option&lt;SeqItem&lt;REQ&gt;&gt;</code></td><td>37</td></tr>
+<tr><td><code>rsp.set_id_info(req)</code> + <code>get_response()</code></td><td>auto-tagged; <code>get_response(Some(ticket))</code> / <code>try_get_response</code></td><td>37, 38</td></tr>
+<tr><td><code>seq.start(seqr)</code> / virtual sequence with no sequencer</td><td><code>seq.start(&amp;seqr)</code> / <code>start_virtual()</code></td><td>36, 39</td></tr>
+<tr><td>sequencer grab/lock/priority arbitration</td><td>unported (FIFO arbitration only) — a recorded gap</td><td>36</td></tr>
+<tr><td><code>assert</code> (prints, simulation continues)</td><td><code>assert!</code> (panic = test fails, on the spot)</td><td>9</td></tr>
+<tr><td><code>uvm_error</code> vs <code>uvm_fatal</code> (convention)</td><td><code>CheckSink::error</code> = DUT check; <code>panic!</code> = testbench bug</td><td>9, 24</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="chapter-map">Chapter map to the earlier books</h2>
+
+<p>Two books precede <em>Rust for RTL Verification</em>, and either prepares you for
+it: <a href="https://www.uvmprimer.com"><em>The UVM Primer</em></a> (SystemVerilog)
+and <a href="https://a.co/d/0hTKAJvh"><em>Python for RTL Verification</em></a>
+(Python/cocotb/pyuvm). This table maps every chapter to its companion chapters in
+both, for readers who want to compare treatments — or to lend the right book to a
+colleague. A dash means the topic has no mirror in that book.</p>
+
+<div class="table-scroll">
+<table>
+<thead><tr><th>Rust for RTL Verification</th><th>The UVM Primer</th><th>Python for RTL Verification</th></tr></thead>
+<tbody>
+<tr><td>Ch. 1: Why Rust?</td><td>Ch. 1: Introduction</td><td>Why Python and why UVM?</td></tr>
+<tr><td>Ch. 2: Rust Concepts</td><td>—</td><td>Python concepts</td></tr>
+<tr><td>Ch. 3: Rust Basics</td><td>—</td><td>Python basics</td></tr>
+<tr><td>Ch. 4: Conditions, Loops, and match</td><td>—</td><td>Conditions and loops / Ranges</td></tr>
+<tr><td>Ch. 5: Ownership</td><td><em>(no mirror — GC did this silently)</em></td><td><em>(no mirror)</em></td></tr>
+<tr><td>Ch. 6: Borrowing and References</td><td><em>(no mirror)</em></td><td><em>(no mirror)</em></td></tr>
+<tr><td>Ch. 7: Structs, Enums, and Methods</td><td>Ch. 4: OOP; Ch. 7: Static Methods</td><td>Classes</td></tr>
+<tr><td>Ch. 8: Collections</td><td>—</td><td>Python sequences / Lists / Strings / Dictionaries</td></tr>
+<tr><td>Ch. 9: Result, Option, and the End of Exceptions</td><td>—</td><td>Exceptions</td></tr>
+<tr><td>Ch. 10: Traits</td><td>Ch. 5: Classes and Extension; Ch. 6: Polymorphism</td><td>Inheritance / super() / protocols</td></tr>
+<tr><td>Ch. 11: Generics</td><td>Ch. 8: Parameterized Class Definitions</td><td>(duck typing, throughout)</td></tr>
+<tr><td>Ch. 12: Closures and Iterators</td><td>—</td><td>Generators / comprehensions</td></tr>
+<tr><td>Ch. 13: Smart Pointers</td><td>—</td><td>Protecting attributes</td></tr>
+<tr><td>Ch. 14: Modules, Crates, and Cargo</td><td>—</td><td>Modules</td></tr>
+<tr><td>Interlude: The Complete TinyALU Testbench</td><td><em>(the destination, previewed)</em></td><td><em>(testbench 8.0, previewed)</em></td></tr>
+<tr><td>Ch. 15: async/await and the Executor</td><td><em>(the simulator's scheduler, opened up)</em></td><td>Coroutines</td></tr>
+<tr><td>Ch. 16: Tasks, Channels, and Sim-Aware Queues</td><td>Ch. 17: Interthread Communication</td><td>cocotb Queue</td></tr>
+<tr><td>Ch. 17: Simulating with rustdv-sim</td><td>—</td><td>Simulating with cocotb</td></tr>
+<tr><td>Ch. 18: Basic Testbench: 1.0</td><td>Ch. 2: A Conventional Testbench</td><td>Basic testbench: 1.0</td></tr>
+<tr><td>Ch. 19: TinyAluBfm</td><td>Ch. 3: Interfaces and BFMs</td><td>TinyAluBfm</td></tr>
+<tr><td>Ch. 20: Struct-Based Testbench: 2.0</td><td>Ch. 10: An Object-Oriented Testbench</td><td>Class-based testbench: 2.0</td></tr>
+<tr><td>Ch. 21: Macros</td><td><em>(the <code>`uvm_*_utils</code> macros, demystified)</em></td><td>(decorators; design patterns)</td></tr>
+<tr><td>Ch. 22: Why UVM?</td><td>Ch. 1: Introduction</td><td>Why UVM?</td></tr>
+<tr><td>Ch. 23: uvm_test Testbench: 3.0</td><td>Ch. 11: UVM Tests</td><td>uvm_test testbench: 3.0</td></tr>
+<tr><td>Ch. 24: Components</td><td>Ch. 12: UVM Components</td><td>uvm_component</td></tr>
+<tr><td>Ch. 25: uvm_env Testbench: 4.0</td><td>Ch. 13: UVM Environments</td><td>uvm_env testbench: 4.0</td></tr>
+<tr><td>Ch. 26: Logging</td><td>Ch. 19: UVM Reporting</td><td>Logging</td></tr>
+<tr><td>Ch. 27: Configuration</td><td><em>(uvm_config_db, in passing)</em></td><td>ConfigDB()</td></tr>
+<tr><td>Ch. 28: Configuration Debugging</td><td>—</td><td>Debugging the ConfigDB()</td></tr>
+<tr><td>Ch. 29: The Factory</td><td>Ch. 9: The Factory Pattern</td><td>The UVM factory</td></tr>
+<tr><td>Ch. 30: Variation-Point Testbench: 5.0</td><td>—</td><td>UVM factory testbench: 5.0</td></tr>
+<tr><td>Ch. 31: Component Communications</td><td>Ch. 14: A New Paradigm; Ch. 18: Put and Get Ports</td><td>Component communications</td></tr>
+<tr><td>Ch. 32: Analysis Ports</td><td>Ch. 15: Talking to Multiple Objects</td><td>Analysis ports</td></tr>
+<tr><td>Ch. 33: Components in Testbench 6.0</td><td>Ch. 16: Analysis Ports in a Testbench</td><td>Components in testbench 6.0</td></tr>
+<tr><td>Ch. 34: Connections in Testbench 6.0</td><td>Ch. 18: Put and Get in Action; Ch. 22: UVM Agents</td><td>Connections in testbench 6.0</td></tr>
+<tr><td>Ch. 35: Transactions</td><td>Ch. 20: Deep Operations; Ch. 21: UVM Transactions</td><td>uvm_object in Python</td></tr>
+<tr><td>Ch. 36: Sequence Testbench: 7.0</td><td>Ch. 23: UVM Sequences</td><td>Sequence testbench: 7.0</td></tr>
+<tr><td>Ch. 37: Out-of-Order Transactions: Testbench 7.1</td><td>Ch. 23: UVM Sequences</td><td>Fibonacci testbench: 7.1 / get_response() testbench: 7.2</td></tr>
+<tr><td>Ch. 38: Fibonacci Testbench: 7.2</td><td>Ch. 23: UVM Sequences</td><td>Fibonacci testbench: 7.1</td></tr>
+<tr><td>Ch. 39: Virtual Sequence Testbench: 8.0</td><td>Ch. 23: UVM Sequences</td><td>Virtual sequence testbench: 8.0</td></tr>
+<tr><td>Ch. 40: The Complete TinyALU Testbench</td><td><em>(no mirror)</em></td><td><em>(no mirror)</em></td></tr>
+</tbody>
+</table>
+</div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-cols">
+      <div>
+        <h4>Learn</h4>
+        <ul>
+          <li><a href="getting-started.html">Getting Started</a></li>
+          <li><a href="book/index.html">The Book</a></li>
+          <li><a href="introduction.html">Introduction to rustdv</a></li>
+          <li><a href="translations.html">UVM Translation Tables</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Project</h4>
+        <ul>
+          <li><a href="https://github.com/rustdv/rustdv">GitHub Repository</a></li>
+          <li><a href="https://github.com/rustdv/rustdv/discussions">GitHub Discussions</a></li>
+          <li><a href="https://crates.io/crates/rustdv">rustdv on crates.io</a></li>
+          <li><a href="https://docs.rs/rustdv">API Documentation (docs.rs)</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>About</h4>
+        <ul>
+          <li><a href="journey.html">Built with Claude</a></li>
+          <li><a href="https://www.uvmprimer.com">The UVM Primer</a></li>
+          <li><a href="https://a.co/d/0hTKAJvh">Python for RTL Verification</a></li>
+          <li><a href="https://buymeacoffee.com/raysalemi">Buy Me a Coffee</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Ray Salemi. rustdv is free and open source.</span>
+      <span>rustdv.org</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

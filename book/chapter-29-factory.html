@@ -1,0 +1,464 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>The Factory - Rust for RTL Verification</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A complete course in Rust and rustdv">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-e96d0476.css">
+        <link rel="stylesheet" href="css/chrome-be44eb3b.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="github-markdown-482a44a1.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-d33968a7.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-113777c1.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Rust for RTL Verification</h1>
+
+                    <div class="right-buttons">
+                        <a href="https://buymeacoffee.com/raysalemi" class="coffee-button" title="Buy me a coffee" aria-label="Buy me a coffee" target="_blank" rel="noopener noreferrer">
+                            <span class="coffee-emoji" aria-hidden="true">&#9749;</span><span class="coffee-label">&nbsp;Buy me a coffee</span>
+                        </a>
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main class="markdown-body">
+                        <h1 id="chapter-29-the-factory"><a class="header" href="#chapter-29-the-factory">Chapter 29: The Factory</a></h1>
+<p>The UVM factory answers a question every test writer eventually asks: <em>how do I change what the testbench does without editing the testbench?</em> One environment, closed and finished, should serve many tests — and configuration alone only changes <em>values</em>. To change what a slot in the hierarchy is <em>built as</em>, you need construction itself to be interceptable. That is the factory, and rustdv has one, working the way the factory you know works: build a component through it, and code above you can substitute a different type without touching the code that built it.</p>
+<blockquote>
+<p><strong>In the UVM…</strong> we instantiated components through the factory — <code>tiny_component::type_id::create("tc", this)</code> in SystemVerilog, <code>TinyComponent.create("tc", self)</code> in pyuvm — instead of calling the constructor; then <code>set_type_override_by_type(...)</code> made every subsequent create of a Tiny produce a Medium, and an instance override targeted one path. Registration happened behind our backs — the <code>`uvm_component_utils</code> macro in SV, a metaclass at import time in Python — and <code>factory.print()</code> listed the overrides in force.</p>
+</blockquote>
+<p>Everything in that box has a direct rustdv counterpart, and this chapter walks them in the same order the Python book’s factory chapter does. The differences are under the floor, and the chapter will point at each as it goes by.</p>
+<h2 id="creating-a-component-through-the-factory"><a class="header" href="#creating-a-component-through-the-factory">Creating a component through the factory</a></h2>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 29, Figure 1: A tiny example component
+#[derive(Component, Default)]
+struct TinyComponent;
+
+impl Component for TinyComponent {
+    async fn run(&amp;mut self, ctx: &amp;mut RustdvCtx) -&gt; Result&lt;(), TestError&gt; {
+        let _obj = ctx.raise_objection("tiny");
+        ctx.info("I'm so tiny!");
+        Ok(())
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>Nothing here mentions the factory, and that is the first difference worth noticing: <strong>registration is universal and automatic.</strong> <code>#[derive(Component)]</code> enrolls every component by name, so <code>TinyComponent</code> can be created by type or by the string <code>"TinyComponent"</code>, and can be the target of an override, with no separate registration step and no “did I remember the utils macro?” This is the same promise pyuvm’s metaclass makes, kept by the derive you were already writing.</p>
+<p>Now, two ways to build one:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 29, Figure 2: Building the component the normal way
+#[rustdv::test]
+#[derive(Component, Default)]
+struct TinyTest {
+    #[component]
+    tc: RustdvComp,
+}
+
+impl Component for TinyTest {
+    fn build(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        self.tc = TinyComponent::new_comp();
+    }
+}
+<span class="boring">}</span></code></pre>
+<pre><code class="language-text"># Figure 3: The normal way builds what it says
+
+      0.00ns INFO     running TinyTest (1/7)  [ch29-factory/src/ch29_factory.rs:71]
+      0.00ns INFO     [TinyTest.tc]: I'm so tiny!
+</code></pre>
+<p><code>new_comp()</code> is rustdv’s plain constructor — the analog of UVM’s <code>new</code>. Note what it does <em>not</em> take: no name, no parent. Both come from the tree, as they have since Chapter 24. A component built this way is fixed; nobody upstream can swap it, because it never went through the factory.</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 29, Figure 4: Building the component through the factory
+#[rustdv::test]
+#[derive(Component, Default)]
+struct TinyFactoryTest {
+    #[component]
+    tc: RustdvComp,
+}
+
+impl Component for TinyFactoryTest {
+    fn build(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        self.tc = TinyComponent::create_comp();
+    }
+}
+<span class="boring">}</span></code></pre>
+<pre><code class="language-text"># Figure 5: The factory way builds the same thing — until someone objects
+
+      0.00ns INFO     running TinyFactoryTest (2/7)  [ch29-factory/src/ch29_factory.rs:90]
+      0.00ns INFO     [TinyFactoryTest.tc]: I'm so tiny!
+</code></pre>
+<p>Put figures 2 and 4 side by side: identical structs, one <code>RustdvComp</code> field each, and exactly one line different — <code>new_comp()</code> versus <code>create_comp()</code>. With no override in force they even log the same output. The difference is invisible here and total later: <code>create_comp()</code> flags the slot, and the build walk checks flagged slots for an override and swaps in the substitute if one is installed. This is the <code>new</code> versus <code>create</code> distinction every UVM engineer already carries, transcribed — and it puts a real decision in the block author’s hands: <strong>overridability is the build line, not the field type.</strong> A <code>RustdvComp</code> field says nothing about whether its occupant can be swapped; the line that fills it says everything. Write <code>create_comp()</code> for the slots a reuser may replace, <code>new_comp()</code> for the ones they may not.</p>
+<p>The string form completes the set:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 29, Figure 6: Building a component from a string name
+#[rustdv::test]
+#[derive(Component, Default)]
+struct CreateByNameTest {
+    #[component]
+    tc: RustdvComp,
+}
+
+impl Component for CreateByNameTest {
+    fn build(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        self.tc = Factory::create_by_name("TinyComponent");
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>The name is data — here a literal, in a bigger testbench a line from a command file. The universal registry is what turns the string back into a constructor, and this test logs exactly what figures 3 and 5 did. An unregistered name is a testbench bug and fails at this call — names are data, and no compiler checks data.</p>
+<h2 id="overriding-a-type"><a class="header" href="#overriding-a-type">Overriding a type</a></h2>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 29, Figure 7: The component we substitute in
+#[derive(Component, Default)]
+struct MediumComponent;
+
+impl Component for MediumComponent {
+    async fn run(&amp;mut self, ctx: &amp;mut RustdvCtx) -&gt; Result&lt;(), TestError&gt; {
+        let _obj = ctx.raise_objection("medium");
+        ctx.info("I'm medium size.");
+        Ok(())
+    }
+}
+<span class="boring">}</span></code></pre>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 29, Figure 8: Overriding TinyComponent with MediumComponent, by type
+#[rustdv::test]
+#[derive(Component, Default)]
+struct MediumFactoryTest {
+    #[component]
+    tc: RustdvComp,
+}
+
+impl Component for MediumFactoryTest {
+    fn build(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        Factory::set_type_override::&lt;TinyComponent, MediumComponent&gt;();
+        self.tc = TinyComponent::create_comp();
+    }
+}
+<span class="boring">}</span></code></pre>
+<pre><code class="language-text"># Figure 9: The same create line builds something else
+
+      0.00ns INFO     running MediumFactoryTest (4/7)  [ch29-factory/src/ch29_factory.rs:151]
+      0.00ns INFO     [MediumFactoryTest.tc]: I'm medium size.
+</code></pre>
+<p>Read the build closely, because its two lines are doing Chapter 24’s argument one more time. The create line is unedited — it still says <code>TinyComponent::create_comp()</code>, and in a real testbench it would live in an environment that never learns it was overridden. The override is installed <em>above</em>, before the create runs, and it is build’s top-down direction that guarantees the ordering: the test’s <code>build</code> runs before the walk descends to the slot, so the override is in force by the time it matters. This is the gap between existing and having children, doing exactly the job Chapter 24 promised the factory would need it for.</p>
+<p>One check does happen at compile time, and it is worth being exact about which: the type pair. <code>set_type_override::&lt;TinyComponent, MediumComponent&gt;()</code> requires the substitute to <em>be</em> a component — the maker generated from it must produce a tree node — so overriding with a non-component does not build. SystemVerilog catches that analog at run time in <code>$cast</code>. Which slot gets overridden, though, and whether anyone creates a <code>TinyComponent</code> at all — those resolve at run time, by design, because deferring them is what the factory is <em>for</em>.</p>
+<p>When even the types are data, the override is too:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 29, Figure 10: The same override, by string name
+#[rustdv::test]
+#[derive(Component, Default)]
+struct MediumNameTest {
+    #[component]
+    tc: RustdvComp,
+}
+
+impl Component for MediumNameTest {
+    fn build(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        Factory::set_type_override_by_name("TinyComponent", "MediumComponent");
+        self.tc = TinyComponent::create_comp();
+    }
+}
+<span class="boring">}</span></code></pre>
+<pre><code class="language-text"># Figure 11: Same substitution, by name
+
+      0.00ns INFO     running MediumNameTest (5/7)  [ch29-factory/src/ch29_factory.rs:171]
+      0.00ns INFO     [MediumNameTest.tc]: I'm medium size.
+</code></pre>
+<h2 id="overriding-one-instance"><a class="header" href="#overriding-one-instance">Overriding one instance</a></h2>
+<p>A type override hits every flagged slot that asks for the type. Sometimes you want just one:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 29, Figure 12: An environment with two components of the same type
+#[derive(Component, Default)]
+struct TwoCompEnv {
+    #[component]
+    tc1: RustdvComp,
+    #[component]
+    tc2: RustdvComp,
+}
+
+impl Component for TwoCompEnv {
+    fn build(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        self.tc1 = TinyComponent::create_comp();
+        self.tc2 = TinyComponent::create_comp();
+    }
+}
+<span class="boring">}</span></code></pre>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 29, Figure 13: Overriding only env.tc1
+#[rustdv::test]
+#[derive(Component, Default)]
+struct TwoCompTest {
+    #[component]
+    env: Option&lt;TwoCompEnv&gt;,
+}
+
+impl Component for TwoCompTest {
+    fn build(&amp;mut self, ctx: &amp;mut RustdvCtx) {
+        Factory::set_inst_override::&lt;TinyComponent, MediumComponent&gt;(ctx, "env.tc1");
+        self.env = Some(TwoCompEnv::default());
+    }
+}
+<span class="boring">}</span></code></pre>
+<pre><code class="language-text"># Figure 14: The path picks the instance
+
+      0.00ns INFO     running TwoCompTest (6/7)  [ch29-factory/src/ch29_factory.rs:218]
+      0.00ns INFO     [TwoCompTest.env.tc1]: I'm medium size.
+      0.00ns INFO     [TwoCompTest.env.tc2]: I'm so tiny!
+</code></pre>
+<p>Notice what the env did <em>not</em> do: it built <code>tc1</code> and <code>tc2</code> with two identical <code>create_comp()</code> calls, no names typed. The factory can still tell them apart because the <em>fields</em> are named — when the walk reaches each slot, it checks the override against the path it landed at, and <code>env.tc1</code> matches while <code>env.tc2</code> does not. The path in <code>set_inst_override</code> is a string, but it is a string doing the same job <code>ConfigDb::set</code>’s path does: addressing a component elsewhere in the tree, from a place that has no other way to point at it. It does not duplicate a name the field already carries.</p>
+<p>(And the demonstration is not vacuous: delete the <code>set_inst_override</code> line and both children log “I’m so tiny!”; restore it and only <code>tc1</code> changes. The override drives the outcome — a rerun anyone can do.)</p>
+<h2 id="debugging-the-factory"><a class="header" href="#debugging-the-factory">Debugging the factory</a></h2>
+<p>Chapter 28 gave the ConfigDb a dump because a resolved value doesn’t show the competition. The factory has the same need — a resolved build tells you what got built, not <em>why</em> — and the same answer:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 29, Figure 15: Printing the overrides in force
+#[rustdv::test]
+#[derive(Component, Default)]
+struct PrintOverridesTest {
+    #[component]
+    tc: RustdvComp,
+}
+
+impl Component for PrintOverridesTest {
+    fn build(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        Factory::set_type_override_by_name("TinyComponent", "MediumComponent");
+        self.tc = TinyComponent::create_comp();
+    }
+
+    fn end_of_elaboration(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        Factory::print();
+    }
+}
+<span class="boring">}</span></code></pre>
+<pre><code class="language-text"># Figure 16: The overrides in force, listed
+
+      0.00ns INFO     running PrintOverridesTest (7/7)  [ch29-factory/src/ch29_factory.rs:241]
+      0.00ns INFO     Factory overrides:
+      0.00ns INFO       *                           : TinyComponent -&gt; MediumComponent
+      0.00ns INFO     [PrintOverridesTest.tc]: I'm medium size.
+</code></pre>
+<p><code>Factory::print()</code> at <code>end_of_elaboration</code>, for Chapter 28’s reason: the hierarchy is final, nothing has run, and what you see is what every <code>create_comp()</code> resolved against. (Under the floor it is the same store the ConfigDb dumps, seen through the factory’s window — a fact you can enjoy and never need.)</p>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>The factory, ported whole and working as the one you know: <code>new_comp()</code> is <code>new</code> and fixed, <code>create_comp()</code> is <code>create</code> and overridable, and the choice between them is the block author deciding what a reuser may swap — per build line, not per type. Registration is universal via the derive, so create-by-name and override-by-name need no bookkeeping; type overrides check at compile time only that the substitute is a component, and everything else — which slots, which paths, whether the override fires at all — resolves during the top-down build walk, which is the moment Chapter 24’s gap exists to provide. Instance overrides tell twins apart by the paths their field names created, and <code>Factory::print()</code> shows the standing orders when a build surprises you.</p>
+<p>Testbench 5.0 puts the factory to work: one environment with a variation point, and two tests that fill it differently without touching a line of the env.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="chapter-28-config-debugging.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="chapter-30-variation-point-testbench-5.0.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="chapter-28-config-debugging.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="chapter-30-variation-point-testbench-5.0.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-09f2665d.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

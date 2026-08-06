@@ -1,0 +1,509 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>TinyAluBfm - Rust for RTL Verification</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A complete course in Rust and rustdv">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-e96d0476.css">
+        <link rel="stylesheet" href="css/chrome-be44eb3b.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="github-markdown-482a44a1.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-d33968a7.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-113777c1.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Rust for RTL Verification</h1>
+
+                    <div class="right-buttons">
+                        <a href="https://buymeacoffee.com/raysalemi" class="coffee-button" title="Buy me a coffee" aria-label="Buy me a coffee" target="_blank" rel="noopener noreferrer">
+                            <span class="coffee-emoji" aria-hidden="true">&#9749;</span><span class="coffee-label">&nbsp;Buy me a coffee</span>
+                        </a>
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main class="markdown-body">
+                        <h1 id="chapter-19-tinyalubfm"><a class="header" href="#chapter-19-tinyalubfm">Chapter 19: TinyAluBfm</a></h1>
+<p>Testbench 1.0 worked, and it is unmaintainable — one loop doing five jobs: signal-level communication, stimulus, checking, coverage, reporting. The diagnosis both earlier books delivered holds without translation: copy-and-modify testbenches lead “only to frustration and tears.” The cure starts here, by extracting the lowest layer — everything that touches a pin — into a <strong>bus functional model</strong>.</p>
+<blockquote>
+<p><strong>In the UVM…</strong> the BFM owned the pins. SystemVerilog built it as an interface with tasks — the Primer’s move, made in its third chapter. Python built <code>TinyAluBfm</code> as a <em>singleton</em> class holding three queues and three forever-loops on the falling clock edge: <code>cmd_driver</code> drove commands from a queue, <code>cmd_mon</code> captured <code>(A, B, op)</code> tuples when <code>start</code> rose, and <code>result_mon</code> captured <code>result</code> when <code>done</code> rose. Either way, tests talked only to <code>reset()</code>, <code>send_op()</code>, <code>get_cmd()</code>, and <code>get_result()</code>, and never touched a signal again.</p>
+</blockquote>
+<p>Same design here — the three loops, the three queues, the four-method surface — with one architectural change we should discuss up front, because it is this chapter’s Rust lesson.</p>
+<h2 id="where-the-singleton-went"><a class="header" href="#where-the-singleton-went">Where the singleton went</a></h2>
+<p>The Python <code>TinyAluBfm</code> was a singleton for a sensible reason: one TinyALU, therefore one BFM, and Python’s easiest way to guarantee “the same object wherever you ask for it” was <code>metaclass=Singleton</code>. But look at what the singleton was really <em>doing</em>: providing shared access to a single owner of the DUT pins. That is an ownership sentence, and Rust has ownership in the type system. The rustdv BFM is a plain struct; the test creates exactly one and shares it as <code>Rc&lt;TinyAluBfm&gt;</code> — Chapter 13’s counted handle, passed to whoever needs it. Sharing is explicit in the type instead of ambient in a global, which pays off the day your <em>next</em> DUT has two identical bus interfaces: two BFMs, two <code>Rc</code>s, no singleton to un-design.¹</p>
+<p>The BFM lives in <code>tinyalu_utils</code>, an ordinary library crate that every remaining testbench version lists in its <code>[dependencies]</code> — where Python smuggled the equivalent module in through <code>sys.path</code> (Chapter 14’s payoff, part two: <code>Ops</code>, <code>alu_prediction</code>, and <code>get_int</code> moved in with it).</p>
+<blockquote>
+<p>¹ pyuvm’s own documentation reached a similar conclusion over the years; singletons make testbenches easy to write and hard to reuse. Rust simply makes the reusable version the path of least resistance.</p>
+</blockquote>
+<h2 id="living-on-the-clock-edge"><a class="header" href="#living-on-the-clock-edge">Living on the clock edge</a></h2>
+<p>Digital systems act on clock edges. The TinyALU works on the rising edge, so — the discipline from Chapter 17 — the BFM’s loops all set and sample on the <em>falling</em> edge, and every one of them is a variation on one skeleton:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Figure 1: Every BFM loop lives on the falling edge
+
+loop {
+    clk.falling_edge().await;
+    // ... check signals and do the work
+}
+<span class="boring">}</span></code></pre>
+<h2 id="the-struct-and-its-queues"><a class="header" href="#the-struct-and-its-queues">The struct and its queues</a></h2>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Figure 2: The TinyAluBfm struct — one owner of the pins
+
+pub struct TinyAluBfm {
+    clk: LogicHandle,
+    reset_n: LogicHandle,
+    start: LogicHandle,
+    done: LogicHandle,
+    a: LogicHandle,
+    b: LogicHandle,
+    op: LogicHandle,
+    result: LogicHandle,
+    driver_queue: Queue&lt;(u8, u8, Ops)&gt;,
+    cmd_mon_queue: Queue&lt;CmdTuple&gt;,
+    result_mon_queue: Queue&lt;u64&gt;,
+}
+<span class="boring">}</span></code></pre>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Figure 3: Initializing the TinyAluBfm
+
+impl TinyAluBfm {
+    pub fn new(dut: &amp;HierarchyHandle) -&gt; Result&lt;TinyAluBfm, HandleError&gt; {
+        Ok(TinyAluBfm {
+            clk: dut.signal("clk")?,
+            reset_n: dut.signal("reset_n")?,
+            start: dut.signal("start")?,
+            done: dut.signal("done")?,
+            a: dut.signal("A")?,
+            b: dut.signal("B")?,
+            op: dut.signal("op")?,
+            result: dut.signal("result")?,
+            driver_queue: Queue::new(Some(1)),
+            cmd_mon_queue: Queue::unbounded(),
+            result_mon_queue: Queue::unbounded(),
+        })
+    }
+<span class="boring">}</span></code></pre>
+<p>Read the queue capacities against the Python <code>__init__</code>, because they carry the same design decisions: the <strong>driver queue</strong> holds one command (<code>maxsize=1</code>), so <code>send_op</code> blocks until the driver has taken the previous command — backpressure straight from Chapter 16’s size-1 queue figure. The two <strong>monitor queues</strong> are unbounded, because monitors must never stall the bus they observe; they publish with the nonblocking <code>try_put</code> and let the consumer catch up on its own schedule. And note the eight <code>?</code> marks: the BFM’s constructor resolves every signal it will ever touch, so a renamed port fails the test at time zero, by name, before a single edge — testbench 1.0 scattered those lookups through the loop; the BFM concentrates them where they can fail early.</p>
+<p>The queue types make one more Python-invisible decision visible. The driver queue carries <code>(u8, u8, Ops)</code> — inputs the <em>testbench</em> creates, so they are typed at the source. The command-monitor queue carries <code>CmdTuple</code>, an alias for <code>(u64, u64, u64)</code> — values read <em>off the buses</em>, whose interpretation is the consumer’s job, exactly as the Python monitor’s tuples were raw integers. The moment where raw becomes typed is in the test, and it is figure 16’s punchline.</p>
+<h2 id="reset"><a class="header" href="#reset">reset()</a></h2>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Figure 4: Centralizing the reset function
+
+    pub async fn reset(&amp;self) {
+        self.clk.falling_edge().await;
+        self.reset_n.set_u64(0);
+        self.start.set_u64(0);
+        self.a.set_u64(0);
+        self.b.set_u64(0);
+        self.op.set_u64(0);
+        self.clk.falling_edge().await;
+        self.reset_n.set_u64(1);
+        self.clk.falling_edge().await;
+    }
+<span class="boring">}</span></code></pre>
+<p>Line for line the Python <code>reset()</code>. Every future test resets the DUT with one await, and when the reset sequence someday grows a step, it grows in one place.</p>
+<h2 id="the-three-loops"><a class="header" href="#the-three-loops">The three loops</a></h2>
+<p>The BFM’s loops all share the classic skeleton — <code>loop { clk.falling_edge().await; ...work... }</code> — living on the falling edge because the DUT lives on the rising one. The monitors first, since they are simpler. Each is a private method returning the future its loop runs; keep an eye on how the loops get <em>access</em> to the pins:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Figure 5: Monitoring the result bus
+
+    fn result_mon(&amp;self) -&gt; impl std::future::Future&lt;Output = ()&gt; {
+        let (clk, done, result) = (self.clk, self.done, self.result);
+        let queue = self.result_mon_queue.clone();
+        async move {
+            let mut prev_done = 0;
+            loop {
+                clk.falling_edge().await;
+                let dn = get_int(&amp;done);
+                if prev_done == 0 &amp;&amp; dn == 1 {
+                    let _ = queue.try_put(get_int(&amp;result));
+                }
+                prev_done = dn;
+            }
+        }
+    }
+<span class="boring">}</span></code></pre>
+<p>The protocol logic is the classic monitor’s exactly: remember <code>prev_done</code>, and when <code>done</code> goes 0→1 across two falling edges, <code>result</code> is valid — capture it, publish it nonblockingly. The Rust texture is in the two lines before <code>async move</code>. A spawned task must own what it uses (<code>'static</code>, Chapter 12’s <code>move</code> closures), and it cannot borrow <code>self</code>, which the executor might outlive. So the method <em>copies out</em> what the loop needs: <code>LogicHandle</code>s are cheap <code>Copy</code> types (they are IDs into the simulator), and cloning a <code>Queue</code> clones a handle to the shared queue (Chapter 16). The loop owns its working set outright — which is also why no other task can race it for <code>prev_done</code>.</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Figure 6: Monitoring the command signals
+
+    fn cmd_mon(&amp;self) -&gt; impl std::future::Future&lt;Output = ()&gt; {
+        let (clk, start, a, b, op) = (self.clk, self.start, self.a, self.b, self.op);
+        let queue = self.cmd_mon_queue.clone();
+        async move {
+            let mut prev_start = 0;
+            loop {
+                clk.falling_edge().await;
+                let st = get_int(&amp;start);
+                if st == 1 &amp;&amp; prev_start == 0 {
+                    let cmd_tuple = (get_int(&amp;a), get_int(&amp;b), get_int(&amp;op));
+                    let _ = queue.try_put(cmd_tuple);
+                }
+                prev_start = st;
+            }
+        }
+    }
+<span class="boring">}</span></code></pre>
+<p>Same shape, opposite edge of the protocol: <code>start</code> going 0→1 means the command buses are valid.</p>
+<p>The driver is the 1.0 loop’s send-side, verbatim in spirit:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Figure 7: Driving commands on the falling edge of clk
+
+    fn cmd_driver(&amp;self) -&gt; impl std::future::Future&lt;Output = ()&gt; {
+        let (clk, start, done) = (self.clk, self.start, self.done);
+        let (a, b, op) = (self.a, self.b, self.op);
+        let queue = self.driver_queue.clone();
+        async move {
+            start.set_u64(0);
+            a.set_u64(0);
+            b.set_u64(0);
+            op.set_u64(0);
+            loop {
+                clk.falling_edge().await;
+                let st = get_int(&amp;start);
+                let dn = get_int(&amp;done);
+                if st == 0 &amp;&amp; dn == 0 {
+                    // Figure 8: Drive a command when the bus is idle
+
+                    match queue.try_get() {
+                        Some((aa, bb, opr)) =&gt; {
+                            a.set_u64(aa as u64);
+                            b.set_u64(bb as u64);
+                            op.set_u64(opr as u64);
+                            start.set_u64(1);
+                        }
+                        None =&gt; continue,
+                    }
+                } else if st == 1 {
+                    // Figure 9: If start is 1 check done
+
+                    if dn == 1 {
+                        start.set_u64(0);
+                    }
+                }
+            }
+        }
+    }
+<span class="boring">}</span></code></pre>
+<p>Python’s <code>try: get_nowait() ... except QueueEmpty: continue</code> became the <code>match</code> on <code>Option</code> — same protocol, no exception. And notice what the driver <em>doesn’t</em> do: it never reads <code>result</code>. Driving is its whole job; results belong to <code>result_mon</code>. Being able to ignore the rest of the testbench is what modularity buys.</p>
+<h2 id="starting-the-loops-and-talking-to-them"><a class="header" href="#starting-the-loops-and-talking-to-them">Starting the loops, and talking to them</a></h2>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Figure 10: Start the BFM tasks
+
+    pub fn start_tasks(&amp;self) {
+        spawn_named(self.cmd_driver(), "bfm.cmd_driver");
+        spawn_named(self.cmd_mon(), "bfm.cmd_mon");
+        spawn_named(self.result_mon(), "bfm.result_mon");
+    }
+<span class="boring">}</span></code></pre>
+<p><code>start_tasks</code> is an ordinary function, not an <code>async fn</code> — like Python’s <code>start_tasks()</code>, it consumes no simulated time; it just enqueues three tasks (<code>spawn_named</code> is <code>spawn</code> with a name for the log). These are the legitimate fire-and-forget loops from Chapter 16.</p>
+<p>The public face is four awaitables:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Figure 11: The get_cmd() coroutine returns the next command
+
+    pub async fn get_cmd(&amp;self) -&gt; CmdTuple {
+        self.cmd_mon_queue.get().await
+    }
+
+// Figure 12: The get_result() coroutine returns the next result
+
+    pub async fn get_result(&amp;self) -&gt; u64 {
+        self.result_mon_queue.get().await
+    }
+
+// Figure 13: send_op puts the command into the command Queue
+
+    pub async fn send_op(&amp;self, aa: u8, bb: u8, op: Ops) {
+        self.driver_queue.put((aa, bb, op)).await;
+    }
+<span class="boring">}</span></code></pre>
+<p>Every method takes <code>&amp;self</code> — the BFM’s whole public surface is read-shaped borrowing, the interior queues handling the mutation. That is the property that lets <code>Rc&lt;TinyAluBfm&gt;</code> work without a <code>RefCell</code> in sight, as Chapter 13 promised it would.</p>
+<h2 id="the-test-rewritten-on-top"><a class="header" href="#the-test-rewritten-on-top">The test, rewritten on top</a></h2>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Figure 14: Starting a test by resetting the DUT
+// and starting the BFM tasks
+
+#[rustdv::test]
+async fn test_alu(ctx: RustdvCtx) -&gt; Result&lt;(), TestError&gt; {
+    // Test all TinyALU operations through the BFM
+    let mut rng = ctx.rng();
+    let mut passed = true;
+    // The RTL self-clocks (tinyalu.sv); the BFM only waits on edges.
+    let bfm = Rc::new(TinyAluBfm::new(&amp;ctx.dut())?);
+    bfm.reset().await;
+    bfm.start_tasks();
+
+    let mut cvg: HashSet&lt;Ops&gt; = HashSet::new();
+<span class="boring">}</span></code></pre>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Figure 15: Creating a command and sending it
+
+    for op in Ops::ALL {
+        let aa = rng.u8();
+        let bb = rng.u8();
+        bfm.send_op(aa, bb, op).await;
+
+// Figure 16: Wait to get the command from the DUT
+// and store it in the coverage set
+
+        let seen_cmd = bfm.get_cmd().await;
+        let seen_op = Ops::from_u64(seen_cmd.2).expect("illegal op on the bus");
+        cvg.insert(seen_op);
+
+// Figure 17: Wait for the result, then create a prediction
+
+        let result = bfm.get_result().await as u16;
+        let pr = alu_prediction(aa, bb, op);
+
+// Figure 18: Check the result against the predicted result
+
+        if result == pr {
+            log::info(&amp;format!("PASSED: {aa:02x} {op:?} {bb:02x} = {result:04x}"));
+        } else {
+            log::error(&amp;format!(
+                "FAILED: {aa:02x} {op:?} {bb:02x} = {result:04x} - predicted {pr:04x}"
+            ));
+            passed = false;
+        }
+    }
+<span class="boring">}</span></code></pre>
+<p>Compare this loop with Chapter 18’s. No falling edges, no <code>start</code>/<code>done</code> bookkeeping, no protocol states — a <code>for</code> over the ops, a send, two gets, a compare. The signal-level grime is <em>gone from the test</em>, which reads at the level a test should: operations, predictions, verdicts.</p>
+<p>Two Python-book points survive intact and deserve their reprise. First, we read the command back from the monitor even though we just created it — because an independent read catches driver bugs, and because a future testbench may watch a TinyALU it doesn’t drive. Second, the monitor gave us raw integers, and <code>Ops::from_u64(seen_cmd.2)</code> is the boundary where the raw bus value must prove it is a legal operation — Python’s <code>Ops(seen_cmd[2])</code> raising on garbage, become an <code>Option</code> we <code>expect</code> on, since an illegal opcode on the bus here means our own driver broke: testbench bug, panic, per the taxonomy.</p>
+<p>The coverage check and final <code>Result</code> close the test exactly as 1.0 did, and:</p>
+<pre><code class="language-text"># Figure 19: Another successful test
+--
+     50.00ns INFO     PASSED: c1 Add 67 = 0128
+     70.00ns INFO     PASSED: 5e And 0b = 000a
+     90.00ns INFO     PASSED: b9 Xor 80 = 0039
+    140.00ns INFO     PASSED: a5 Mul 75 = 4b69
+    140.00ns INFO     Covered all operations
+    140.00ns INFO     test_alu PASSED
+</code></pre>
+<p>Same seed, same operands, same results as Chapter 18’s transcript — <code>c1 Add 67</code> and friends — ten nanoseconds later apiece, the cost of the queue hop between test and driver. Two testbenches, one behavior, and the second one you could hand to a teammate.</p>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>This chapter extracted testbench 1.0’s signal-level layer into <code>TinyAluBfm</code>: three falling-edge loops (driver, command monitor, result monitor) around three queues (bounded driver queue for backpressure, unbounded monitor queues so observation never stalls the bus), fronted by <code>reset()</code>, <code>send_op()</code>, <code>get_cmd()</code>, and <code>get_result()</code>. The Python singleton became a plain struct shared as <code>Rc</code> — ownership machinery doing the “exactly one, available to all” job the metaclass did, without foreclosing on a second instance. Spawned loops copy out the handles they need and own their state; the constructor front-loads every signal lookup behind <code>?</code>; and the test now reads as stimulus-predict-compare with no pins in it.</p>
+<p>The test is still doing three jobs, though — generating, checking, covering — and version 2.0 splits <em>those</em> apart: driver, monitors, scoreboard as structs with methods, wired by hand, so we can feel precisely the plumbing pain that the UVM chapters exist to remove. Onward.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="chapter-18-basic-testbench-1.0.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="chapter-20-struct-based-testbench-2.0.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="chapter-18-basic-testbench-1.0.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="chapter-20-struct-based-testbench-2.0.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-09f2665d.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>rustdv: The UVM in Rust</title>
+<meta name="description" content="rustdv is an open-source hardware verification framework inspired by the UVM — components, phases, configuration, a factory, TLM, and sequences — built with Rust's own tools.">
+<link rel="icon" type="image/png" href="assets/rustdv-logo.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img src="assets/rustdv-logo.png" alt="rustdv logo">
+      rustdv
+    </a>
+    <nav class="site-nav">
+      <a href="getting-started.html">Getting Started</a>
+      <a href="introduction.html">Introduction</a>
+      <a href="translations.html">UVM Translations</a>
+      <a href="https://github.com/rustdv/rustdv">GitHub</a>
+      <a class="nav-cta" href="book/index.html">Read the Book</a>
+      <a class="nav-coffee" href="https://buymeacoffee.com/raysalemi" title="Buy Me a Coffee">&#9749;</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<div class="hero">
+  <img class="hero-logo" src="assets/rustdv-logo.png" alt="rustdv — gears and a connected hierarchy inside a hexagon">
+  <h1>rustdv: The UVM in Rust</h1>
+  <p class="release-badge">v0.1 — try it, then come discuss it</p>
+  <p class="pitch">The UVM, transformed to run in Rust: the component tree and its
+  phases, the ConfigDb, the factory, TLM, analysis, and the full sequencer
+  handshake. Your testbench compiles to native code that the simulator loads.
+  Zero external dependencies.</p>
+  <div class="cta-row">
+    <a class="btn btn-primary" href="getting-started.html">Get Started</a>
+    <a class="btn btn-secondary" href="https://github.com/rustdv/rustdv">View on GitHub</a>
+  </div>
+</div>
+
+<section class="alt">
+  <div class="wrap">
+    <h2>What it looks like</h2>
+    <p class="section-lede">A rustdv test is an async Rust function. Signals are handles
+    you read and drive; simulated time is something you <code>await</code>.</p>
+    <pre class="code-sample"><code><span class="kw">use</span> rustdv::prelude::*;
+
+rustdv::<span class="fn">vpi_bootstrap!</span>();
+
+<span class="kw">#[rustdv::test]</span>
+<span class="kw">async fn</span> <span class="fn">alu_test</span>(ctx: RustdvCtx) -&gt; Result&lt;(), TestError&gt; {
+    <span class="cm">// Reset the DUT</span>
+    <span class="kw">let</span> dut = ctx.dut();
+    <span class="kw">let</span> clk = dut.signal(<span class="st">"clk"</span>)?;
+    <span class="kw">let</span> reset_n = dut.signal(<span class="st">"reset_n"</span>)?;
+    <span class="kw">let</span> start = dut.signal(<span class="st">"start"</span>)?;
+
+    clk.falling_edge().<span class="kw">await</span>;
+    reset_n.set_u64(0);
+    start.set_u64(0);
+    clk.falling_edge().<span class="kw">await</span>;
+    reset_n.set_u64(1);
+    <span class="cm">// ... drive transactions, check results ...</span>
+    Ok(())
+}</code></pre>
+    <p class="code-caption">Abridged from the book's testbench 1.0 — in the book itself,
+    every listing is real code from a runnable example, and every transcript is genuine
+    Icarus Verilog output.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>From <code>cargo build</code> to <code>REGRESSION: PASS</code></h2>
+    <p class="section-lede">A rustdv testbench keeps the shape a UVM engineer knows —
+    a tree of components walked by the nine phases. What changes is what it
+    compiles to.</p>
+    <div class="steps">
+      <div class="step">
+        <span class="num">1</span>
+        <h3>A testbench is a crate</h3>
+        <p>Tests, environments, agents, and sequences are Rust structs and traits —
+        <code>#[derive(Component)]</code> writes the tree plumbing. One
+        <code>cargo build</code> turns the whole testbench into a single native
+        library. If it built, it runs.</p>
+      </div>
+      <div class="step">
+        <span class="num">2</span>
+        <h3>rustdv drives the top module</h3>
+        <p>The simulator loads that library and hands rustdv the DUT. There is no
+        Verilog testbench at all — no harness module, no DPI shims, nothing to keep
+        in sync on the HDL side.</p>
+      </div>
+      <div class="step">
+        <span class="num">3</span>
+        <h3>The phases walk the tree</h3>
+        <p>Top-down <code>build</code>, bottom-up <code>connect</code>, an elaboration
+        sweep that names every unwired port — then a concurrent <code>run</code> that
+        ends when the last objection drops, and the closing phases where the
+        scoreboard has its say.</p>
+      </div>
+      <div class="step">
+        <span class="num">4</span>
+        <h3>The run ends in a verdict</h3>
+        <p>Every run closes with the regression table and
+        <code>REGRESSION: PASS</code> — or a failing test, a named cause, and a
+        nonzero exit code your CI can act on.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <h2>Why rustdv</h2>
+    <div class="benefits">
+      <div class="benefit">
+        <h3>The methodology you know</h3>
+        <p>The component tree with build and connect phases, path-addressed
+        configuration, factory overrides by type, name, or instance, TLM ports and
+        FIFOs, analysis ports and subscribers, and the complete sequencer handshake —
+        including virtual sequences. Inspired by the UVM, rebuilt with Rust's own
+        tools.</p>
+      </div>
+      <div class="benefit">
+        <h3>Unit tests without a simulator</h3>
+        <p>rustdv components are ordinary Rust structs. Predictors, transaction
+        operations, and coverage logic run under <code>cargo test</code> in
+        milliseconds — no simulator license anywhere in sight.</p>
+      </div>
+      <div class="benefit">
+        <h3>Native speed</h3>
+        <p>Rust compiles to the same kind of native code as the simulator itself, with
+        no interpreter and no garbage collector in the loop. For regression farms
+        running thousands of seeds — or testbenches that must keep up with an
+        emulator — testbench overhead is real money and real schedule.</p>
+      </div>
+      <div class="benefit">
+        <h3>A compiler that earns its keep</h3>
+        <p>Transactions are plain structs the compiler knows field by field: rename one,
+        and it lists every place that must change. Every object has exactly one owner,
+        which settles at compile time a question methodologies otherwise answer with
+        convention and code review.</p>
+      </div>
+      <div class="benefit">
+        <h3>An open toolchain, end to end</h3>
+        <p>The Rust compiler, cargo, the crates.io ecosystem, and rustdv itself are free
+        and open source. With Icarus Verilog as the simulator, the entire flow — from
+        first chapter to passing regression — costs nothing.</p>
+      </div>
+      <div class="benefit">
+        <h3>Verified, not aspirational</h3>
+        <p>The shipped TinyALU testbench ends <code>REGRESSION: PASS</code>, and the
+        checking has teeth: corrupt the DUT's XOR into an OR, and the scoreboard flags
+        every affected transaction. Every claim on this site is backed by a test that
+        runs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="book-panel">
+      <div class="book-copy">
+        <h2>Learn it from the book</h2>
+        <p><em>Rust for RTL Verification</em> is rustdv's companion book — the third in
+        Ray Salemi's series after <a href="https://www.uvmprimer.com"><em>The UVM
+        Primer</em></a> (SystemVerilog) and
+        <a href="https://a.co/d/0hTKAJvh"><em>Python for RTL Verification</em></a>
+        (Python). It assumes no prior Rust: forty chapters teach the language from
+        zero, then rebuild the TinyALU testbench version by version, 1.0 through 8.0,
+        adding one UVM capability at a time.</p>
+        <p>Every figure runs. Every simulation transcript is genuine Icarus Verilog
+        output, kept in sync with the code by the project's regression suite.</p>
+        <div class="cta-row" style="justify-content:flex-start">
+          <a class="btn btn-primary" href="book/index.html">Read the Book</a>
+          <a class="btn btn-secondary" href="introduction.html">What rustdv Provides</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <h2>Where rustdv stands</h2>
+    <p class="section-lede" style="margin-bottom:1.2rem">This is version 0.1 — not
+    because the work is shaky, but because the conversation is just starting. The
+    framework is complete and verified: a regression suite gates every push, every
+    figure in the book's forty chapters runs, and the checking itself is
+    mutation-tested. What rustdv becomes next — which features, which simulators,
+    which direction — is an open question, and it should be answered in the open.
+    That is why the repository is not taking pull requests or issues yet:
+    the front door is the discussion. Try rustdv on something real, then come say
+    what happened.</p>
+    <div class="cta-row" style="margin-bottom:2.4rem">
+      <a class="btn btn-primary" href="https://github.com/rustdv/rustdv/discussions">Join the Discussion</a>
+    </div>
+    <p class="section-lede" style="margin-bottom:0">rustdv was created by
+    <a href="journey.html">Ray Salemi</a> — author of <em>The UVM Primer</em> and
+    creator of pyuvm — working with Claude, as an example of
+    <a href="https://www.youtube.com/watch?v=bDcgHzCBgmQ">level-5 software
+    development</a>. <a href="journey.html">The story &rarr;</a></p>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-cols">
+      <div>
+        <h4>Learn</h4>
+        <ul>
+          <li><a href="getting-started.html">Getting Started</a></li>
+          <li><a href="book/index.html">The Book</a></li>
+          <li><a href="introduction.html">Introduction to rustdv</a></li>
+          <li><a href="translations.html">UVM Translation Tables</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Project</h4>
+        <ul>
+          <li><a href="https://github.com/rustdv/rustdv">GitHub Repository</a></li>
+          <li><a href="https://github.com/rustdv/rustdv/discussions">GitHub Discussions</a></li>
+          <li><a href="https://crates.io/crates/rustdv">rustdv on crates.io</a></li>
+          <li><a href="https://docs.rs/rustdv">API Documentation (docs.rs)</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>About</h4>
+        <ul>
+          <li><a href="journey.html">Built with Claude</a></li>
+          <li><a href="https://www.uvmprimer.com">The UVM Primer</a></li>
+          <li><a href="https://a.co/d/0hTKAJvh">Python for RTL Verification</a></li>
+          <li><a href="https://buymeacoffee.com/raysalemi">Buy Me a Coffee</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Ray Salemi. rustdv is free and open source.</span>
+      <span>rustdv.org</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

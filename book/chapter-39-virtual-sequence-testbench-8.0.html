@@ -1,0 +1,455 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Virtual Sequence Testbench: 8.0 - Rust for RTL Verification</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A complete course in Rust and rustdv">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-e96d0476.css">
+        <link rel="stylesheet" href="css/chrome-be44eb3b.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="github-markdown-482a44a1.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-d33968a7.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-113777c1.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Rust for RTL Verification</h1>
+
+                    <div class="right-buttons">
+                        <a href="https://buymeacoffee.com/raysalemi" class="coffee-button" title="Buy me a coffee" aria-label="Buy me a coffee" target="_blank" rel="noopener noreferrer">
+                            <span class="coffee-emoji" aria-hidden="true">&#9749;</span><span class="coffee-label">&nbsp;Buy me a coffee</span>
+                        </a>
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main class="markdown-body">
+                        <h1 id="chapter-39-virtual-sequence-testbench-80"><a class="header" href="#chapter-39-virtual-sequence-testbench-80">Chapter 39: Virtual Sequence Testbench: 8.0</a></h1>
+<p>The last three chapters built sequences that send items. This one builds sequences that send nothing at all. A <strong>virtual sequence</strong> is started without a sequencer; it sends no items of its own; it <em>starts other sequences</em>. That is the whole of the idea, and it is what lets a test be assembled from stimulus that already exists rather than written again. Testbench 8.0 is where both earlier books ended their climbs, and it ends this one’s: after this chapter, the machinery is complete.</p>
+<blockquote>
+<p><strong>In the UVM…</strong> we wrote a <code>TestAllSeq</code> extending <code>uvm_sequence</code> whose <code>body()</code> fetched the sequencer from the config database and ran <code>rand_seq.start(seqr)</code> then <code>max_seq.start(seqr)</code>; the test started the virtual sequence <em>without</em> a sequencer argument. A parallel variant forked the sub-sequences and joined them.</p>
+</blockquote>
+<h2 id="a-program-that-runs-programs"><a class="header" href="#a-program-that-runs-programs">A program that runs programs</a></h2>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 39, Figure 1: A virtual sequence starts other sequences
+#[derive(Default)]
+struct TestAllSeq;
+
+impl Sequence for TestAllSeq {
+    type Req = AluCommand;
+    type Rsp = AluResult;
+
+    async fn body(&amp;mut self, ctx: &amp;mut SeqCtx&lt;AluCommand, AluResult&gt;) -&gt; Result&lt;(), SeqError&gt; {
+        let seqr: Sequencer&lt;AluCommand, AluResult&gt; = ConfigDb::get(None, "", "SEQR")?;
+        RandomSeq::default().start(&amp;seqr).await?;
+        MaxSeq::default().start(&amp;seqr).await?;
+        ctx.info("ran random, then max");
+        Ok(())
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>Three observations, in rising order of importance.</p>
+<ul>
+<li>The body finds its sequencer the same way a test does — in the ConfigDb, with the <code>None</code> context, because a sequence has no path to offset from. That was the reason Chapter 27 kept the null-context form.</li>
+<li>There is no <code>start_item</code> and no <code>finish_item</code>. Nothing here touches an item; <code>RandomSeq</code> and <code>MaxSeq</code> do their own item handling exactly as they did in Chapter 36, unchanged.</li>
+<li>It is the <em>same</em> <code>Sequence</code> trait. Nothing marks this sequence “virtual” except what it does — precisely as in SystemVerilog, where <code>runall_sequence extends uvm_sequence #(uvm_sequence_item)</code> and simply never sends one.</li>
+</ul>
+<p>The test that starts it:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 39, Figure 2: The test starts the virtual sequence — no sequencer
+#[rustdv::test]
+#[derive(Component, Default)]
+struct AluTest {
+    #[component]
+    env: RustdvComp,
+}
+
+impl Component for AluTest {
+    fn build(&amp;mut self, ctx: &amp;mut RustdvCtx) {
+        let bfm = TinyAluBfm::new(&amp;ctx.dut()).expect("TinyALU signals");
+        ConfigDb::set(None, "*", "BFM", Rc::new(bfm));
+        self.env = AluEnv::new_comp();
+    }
+
+    async fn run(&amp;mut self, ctx: &amp;mut RustdvCtx) -&gt; Result&lt;(), TestError&gt; {
+        let _obj = ctx.raise_objection("running the virtual sequence");
+        create_seq::&lt;TestAllSeq&gt;().start_virtual().await?;
+        Ok(())
+    }
+}
+<span class="boring">}</span></code></pre>
+<p><code>start_virtual()</code> takes no sequencer, because a virtual sequence has none to take — everything it drives, it drives through sequencers it looked up itself. Why a second method rather than pyuvm’s single <code>start</code> with an optional argument? Rust has no default arguments, so the choice was between <code>start(Some(&amp;seqr))</code> at every ordinary call site — noise that says nothing — or <code>start(None)</code> at the virtual ones, where <code>None</code> fails to say “virtual.” Two names, each meaning what it says.</p>
+<p>One design question deserves an answer here, because a Rust-minded reader will already have asked it: <em>why not a separate <code>VirtualSequence</code> trait?</em> It would make calling <code>start_item</code> inside a virtual sequence a compile error instead of the run-time error pyuvm gives. It would also forbid a shape the UVM allows: <em>The UVM Primer</em>’s <code>parallel_sequence</code> is started <em>with</em> a sequencer and is still virtual in the sense that matters, and nothing stops a sequence from sending some items itself and delegating the rest. Two traits would buy a better error message at the cost of a capability, and the framework declines that trade, knowingly. Late binding keeps its options; the error, if you make it, arrives at run time with a name on it.</p>
+<pre><code class="language-text"># Figure 3: Random, then max
+
+      0.00ns INFO     running AluTest (1/3)  [ch39-virtual-sequence-testbench-8.0/src/ch39_virtual_sequence_testbench_8_0.rs:440]
+    250.00ns INFO     [TestAllSeq]: ran random, then max
+    250.00ns INFO     [AluTest.env.scoreboard]: PASSED: c1 Add 67 = 0128
+    250.00ns INFO     [AluTest.env.scoreboard]: PASSED: 5e And 0b = 000a
+    250.00ns INFO     [AluTest.env.scoreboard]: PASSED: b9 Xor 80 = 0039
+    250.00ns INFO     [AluTest.env.scoreboard]: PASSED: a5 Mul 75 = 4b69
+    250.00ns INFO     [AluTest.env.scoreboard]: PASSED: ff Add ff = 01fe
+    250.00ns INFO     [AluTest.env.scoreboard]: PASSED: ff And ff = 00ff
+    250.00ns INFO     [AluTest.env.scoreboard]: PASSED: ff Xor ff = 0000
+    250.00ns INFO     [AluTest.env.scoreboard]: PASSED: ff Mul ff = fe01
+    250.00ns INFO     [AluTest.env.scoreboard]: Covered all operations
+    250.00ns INFO     AluTest PASSED
+</code></pre>
+<h2 id="the-same-two-sequences-at-the-same-time"><a class="header" href="#the-same-two-sequences-at-the-same-time">The same two sequences, at the same time</a></h2>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 39, Figure 4: Running sub-sequences in parallel
+#[derive(Default)]
+struct TestAllParallelSeq;
+
+impl Sequence for TestAllParallelSeq {
+    type Req = AluCommand;
+    type Rsp = AluResult;
+
+    async fn body(&amp;mut self, ctx: &amp;mut SeqCtx&lt;AluCommand, AluResult&gt;) -&gt; Result&lt;(), SeqError&gt; {
+        let seqr: Sequencer&lt;AluCommand, AluResult&gt; = ConfigDb::get(None, "", "SEQR")?;
+        let mut random = RandomSeq::default();
+        let mut max = MaxSeq::default();
+
+        let (a, b) = join2(random.start(&amp;seqr), max.start(&amp;seqr)).await;
+        a?;
+        b?;
+        ctx.info("ran random and max together");
+        Ok(())
+    }
+}
+<span class="boring">}</span></code></pre>
+<p><code>join2</code> is the <code>fork...join</code> you met in Chapter 16, doing here what <code>fork</code>/<code>join</code> does in every SystemVerilog virtual sequence: both sub-sequences run, and <code>body</code> continues when both are done. The sequencer arbitrates between the two live streams — FIFO order, one item each in turn — so the transcript alternates random operands with <code>0xff</code> operands, both patterns interleaved on one DUT.</p>
+<p>One line of reasoning behind <code>join2</code> rather than <code>spawn</code>: a spawned task must own everything it touches (<code>'static</code> — the rule from Chapter 16), and a sub-sequence that borrows the parent sequence’s state cannot promise that. Composing the two futures in place costs nothing and keeps that door open. The test differs from figure 2 by exactly one line — it starts <code>TestAllParallelSeq</code> instead — and is not worth a listing.</p>
+<pre><code class="language-text"># Figure 5: The two sequences interleave at the sequencer
+
+    250.00ns INFO     running ParallelTest (2/3)  [ch39-virtual-sequence-testbench-8.0/src/ch39_virtual_sequence_testbench_8_0.rs:461]
+    500.00ns INFO     [TestAllParallelSeq]: ran random and max together
+    500.00ns INFO     [ParallelTest.env.scoreboard]: PASSED: c1 Add 67 = 0128
+    500.00ns INFO     [ParallelTest.env.scoreboard]: PASSED: ff Add ff = 01fe
+    500.00ns INFO     [ParallelTest.env.scoreboard]: PASSED: 5e And 0b = 000a
+    500.00ns INFO     [ParallelTest.env.scoreboard]: PASSED: ff And ff = 00ff
+    500.00ns INFO     [ParallelTest.env.scoreboard]: PASSED: b9 Xor 80 = 0039
+    500.00ns INFO     [ParallelTest.env.scoreboard]: PASSED: ff Xor ff = 0000
+    500.00ns INFO     [ParallelTest.env.scoreboard]: PASSED: a5 Mul 75 = 4b69
+    500.00ns INFO     [ParallelTest.env.scoreboard]: PASSED: ff Mul ff = fe01
+    500.00ns INFO     [ParallelTest.env.scoreboard]: Covered all operations
+    500.00ns INFO     ParallelTest PASSED
+</code></pre>
+<h2 id="the-testbench-becomes-a-programming-interface"><a class="header" href="#the-testbench-becomes-a-programming-interface">The testbench becomes a programming interface</a></h2>
+<p>The chapter’s payoff is not running two canned sequences — it is what virtual sequences make possible for the <em>next</em> person on the team: an interface. First, one operation as a sequence:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 39, Figure 6: One operation, as a sequence
+struct OpSeq {
+    a: u8,
+    b: u8,
+    op: Ops,
+    result: Option&lt;u16&gt;,
+}
+
+impl Sequence for OpSeq {
+    type Req = AluCommand;
+    type Rsp = AluResult;
+
+    async fn body(&amp;mut self, ctx: &amp;mut SeqCtx&lt;AluCommand, AluResult&gt;) -&gt; Result&lt;(), SeqError&gt; {
+        let mut cmd = AluCommand { a: self.a, b: self.b, op: self.op };
+        ctx.start_item(&amp;mut cmd).await?;
+        let ticket = ctx.finish_item(cmd).await?;
+        self.result = Some(ctx.get_response(Some(ticket)).await.result);
+        Ok(())
+    }
+}
+<span class="boring">}</span></code></pre>
+<p><code>OpSeq</code> carries parameters, so it is constructed the ordinary way rather than through the factory — the factory’s makers take no arguments, and both source books build their parameterized sequences by hand for the same reason. Its body is Chapter 38 in miniature: send one command, claim its response by ticket, store the answer.</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 39, Figure 7: The TinyALU programming interface
+async fn do_op(
+    seqr: &amp;Sequencer&lt;AluCommand, AluResult&gt;,
+    a: u8,
+    b: u8,
+    op: Ops,
+) -&gt; Result&lt;u16, SeqError&gt; {
+    let mut seq = OpSeq { a, b, op, result: None };
+    seq.start(seqr).await?;
+    seq.result.ok_or_else(|| SeqError::from("the driver returned no result"))
+}
+
+async fn do_add(seqr: &amp;Sequencer&lt;AluCommand, AluResult&gt;, a: u8, b: u8) -&gt; Result&lt;u16, SeqError&gt; {
+    do_op(seqr, a, b, Ops::Add).await
+}
+async fn do_and(seqr: &amp;Sequencer&lt;AluCommand, AluResult&gt;, a: u8, b: u8) -&gt; Result&lt;u16, SeqError&gt; {
+    do_op(seqr, a, b, Ops::And).await
+}
+async fn do_xor(seqr: &amp;Sequencer&lt;AluCommand, AluResult&gt;, a: u8, b: u8) -&gt; Result&lt;u16, SeqError&gt; {
+    do_op(seqr, a, b, Ops::Xor).await
+}
+async fn do_mul(seqr: &amp;Sequencer&lt;AluCommand, AluResult&gt;, a: u8, b: u8) -&gt; Result&lt;u16, SeqError&gt; {
+    do_op(seqr, a, b, Ops::Mul).await
+}
+<span class="boring">}</span></code></pre>
+<p>This is the payoff. A test writer who has never opened the testbench gets four functions that take numbers and return numbers; sequencer, driver, handshake, and response envelope are all behind them. (In Python these read <code>seq.result</code> after <code>start</code> returns, because a coroutine cannot hand a value back through <code>start</code>; here the function returns what it computed, because that is what functions do.)</p>
+<p>And with an interface in hand, a test is just a program:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 39, Figure 8: Fibonacci, written as a program
+#[derive(Default)]
+struct FibonacciProgramSeq;
+
+impl Sequence for FibonacciProgramSeq {
+    type Req = AluCommand;
+    type Rsp = AluResult;
+
+    async fn body(&amp;mut self, ctx: &amp;mut SeqCtx&lt;AluCommand, AluResult&gt;) -&gt; Result&lt;(), SeqError&gt; {
+        let seqr: Sequencer&lt;AluCommand, AluResult&gt; = ConfigDb::get(None, "", "SEQR")?;
+        let mut prev: u8 = 0;
+        let mut cur: u8 = 1;
+        let mut fib = vec![prev as u16, cur as u16];
+
+        for _ in 0..7 {
+            let sum = do_add(&amp;seqr, prev, cur).await?;
+            fib.push(sum);
+            prev = cur;
+            cur = sum as u8;
+        }
+
+        ctx.info(&amp;format!("Fibonacci Sequence: {fib:?}"));
+        Ok(())
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>Compare this against Chapter 38’s Fibonacci, where the handshake was visible at every step. The computation is identical; the sequence machinery has vanished into <code>do_add</code>. This is what a programming interface is for, and why a team that writes tests but not testbenches wants one.</p>
+<p>Its test sets one extra ConfigDb value — <code>ConfigDb::set(None, "*", "CHECK_COVERAGE", false)</code> — because a program that only adds will never cover four operations, and the scoreboard reads that flag at check time. A test changing what the scoreboard demands, through the database, without touching it: the whole book’s runtime-binding half, in one line.</p>
+<pre><code class="language-text"># Figure 9: The TinyALU computes Fibonacci through the interface
+
+    500.00ns INFO     running FibonacciProgramTest (3/3)  [ch39-virtual-sequence-testbench-8.0/src/ch39_virtual_sequence_testbench_8_0.rs:482]
+    670.00ns INFO     [FibonacciProgramSeq]: Fibonacci Sequence: [0, 1, 1, 2, 3, 5, 8, 13, 21]
+    670.00ns INFO     [FibonacciProgramTest.env.scoreboard]: PASSED: 00 Add 01 = 0001
+    670.00ns INFO     [FibonacciProgramTest.env.scoreboard]: PASSED: 01 Add 01 = 0002
+    670.00ns INFO     [FibonacciProgramTest.env.scoreboard]: PASSED: 01 Add 02 = 0003
+    670.00ns INFO     [FibonacciProgramTest.env.scoreboard]: PASSED: 02 Add 03 = 0005
+    670.00ns INFO     [FibonacciProgramTest.env.scoreboard]: PASSED: 03 Add 05 = 0008
+    670.00ns INFO     [FibonacciProgramTest.env.scoreboard]: PASSED: 05 Add 08 = 000d
+    670.00ns INFO     [FibonacciProgramTest.env.scoreboard]: saw 1 of 4 ops (coverage not required)
+    670.00ns INFO     FibonacciProgramTest PASSED
+</code></pre>
+<h2 id="the-environment-underneath"><a class="header" href="#the-environment-underneath">The environment underneath</a></h2>
+<p>The env this chapter runs on is Chapter 38’s, with the driver that answers: it publishes each result on its own analysis port and returns it through <code>item_done(Some(...))</code>, and there is no separate <code>ResultMonitor</code> — the driver already awaits each answer, so it is the component that <em>has</em> it, and a second reader on the BFM’s result queue would take turns stealing results from the first. The observation side, the scoreboard’s two streams, and the <code>SEQR</code> handle in the ConfigDb are all exactly as you left them. Nothing in the environment knows that virtual sequences exist — which is the measure of the design: the top layer of the stimulus stack arrived, and no layer below it moved.</p>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>A virtual sequence is a sequence that starts sequences: same trait, no items of its own, started with <code>start_virtual()</code> because it has no sequencer to be started on. Sequential composition is two <code>start</code> calls in a row; parallel composition is <code>join2</code> over two <code>start</code> futures, with the sequencer interleaving the streams. There is deliberately no <code>VirtualSequence</code> trait — a compile-time fence there would forbid the mixed shapes the UVM permits, and the framework takes the UVM’s side of that trade with its eyes open. The chapter’s real product is the interface pattern: an <code>OpSeq</code> with parameters, wrapped in <code>do_add</code>-style functions, until a test reads like arithmetic and the testbench underneath is invisible.</p>
+<p>That is testbench 8.0, and with it every mechanism the UVM promised: phases, configuration, factory, TLM, analysis, transactions, sequences, and programs built from all of them. Chapter 40 returns to the shipped TinyALU testbench — the one the Interlude showed you before you could read it — and walks it end to end, with nothing left unexplained.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="chapter-38-fibonacci-testbench-7.2.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="chapter-40-complete-tinyalu-testbench.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="chapter-38-fibonacci-testbench-7.2.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="chapter-40-complete-tinyalu-testbench.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-09f2665d.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

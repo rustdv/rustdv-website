@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Building rustdv with Claude — The Story</title>
+<meta name="description" content="How Ray Salemi built rustdv and Rust for RTL Verification in collaboration with Claude — a working example of level-5 software development.">
+<link rel="icon" type="image/png" href="assets/rustdv-logo.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img src="assets/rustdv-logo.png" alt="rustdv logo">
+      rustdv
+    </a>
+    <nav class="site-nav">
+      <a href="getting-started.html">Getting Started</a>
+      <a href="introduction.html">Introduction</a>
+      <a href="translations.html">UVM Translations</a>
+      <a href="https://github.com/rustdv/rustdv">GitHub</a>
+      <a class="nav-cta" href="book/index.html">Read the Book</a>
+      <a class="nav-coffee" href="https://buymeacoffee.com/raysalemi" title="Buy Me a Coffee">&#9749;</a>
+    </nav>
+  </div>
+</header>
+
+<main class="article">
+
+<div class="story-panel" style="margin-bottom:2rem">
+  <img src="assets/ray-salemi.png" alt="Ray Salemi">
+  <div class="story-copy">
+    <h1>Building rustdv with Claude</h1>
+    <p class="subtitle">A working example of level-5 software development.</p>
+  </div>
+</div>
+
+<p>rustdv and its companion book, <em>Rust for RTL Verification</em>, were created by
+Ray Salemi in collaboration with Claude, Anthropic's AI. The project is a working
+example of what Ray calls
+<a href="https://www.youtube.com/watch?v=bDcgHzCBgmQ">level-5 software
+development</a>: the human sets the direction, makes the design decisions, and holds
+the work accountable; the AI writes, tests, and documents the code.</p>
+
+<p>The collaboration produced a complete UVM-inspired verification framework — components,
+phases, configuration, the factory, TLM, analysis, and sequences — with a regression
+suite that gates every push, plus a forty-chapter book in which every listing is real
+code from a runnable example and every simulation transcript is genuine Icarus
+Verilog output.</p>
+
+<div class="note">
+<strong>The full write-up is coming.</strong> Ray is completing a detailed account of
+the journey — what worked, what didn't, and what level-5 development looks like in
+practice on a project of this size. It will be published on this page. In the
+meantime, the <a href="https://www.youtube.com/watch?v=bDcgHzCBgmQ">level-5 software
+development talk</a> explains the idea, and the
+<a href="https://github.com/rustdv/rustdv">repository</a> shows the result.
+</div>
+
+<h2>About Ray Salemi</h2>
+
+<p>Ray Salemi is the author of <a href="https://www.uvmprimer.com"><em>The UVM
+Primer</em></a>, the creator of <a href="https://github.com/pyuvm/pyuvm">pyuvm</a>,
+and the author of <a href="https://a.co/d/0hTKAJvh"><em>Python for RTL
+Verification</em></a>. rustdv is the third act in that series: the same UVM
+methodology, taught the same way — by building a complete TinyALU testbench, version
+by version.</p>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-cols">
+      <div>
+        <h4>Learn</h4>
+        <ul>
+          <li><a href="getting-started.html">Getting Started</a></li>
+          <li><a href="book/index.html">The Book</a></li>
+          <li><a href="introduction.html">Introduction to rustdv</a></li>
+          <li><a href="translations.html">UVM Translation Tables</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Project</h4>
+        <ul>
+          <li><a href="https://github.com/rustdv/rustdv">GitHub Repository</a></li>
+          <li><a href="https://github.com/rustdv/rustdv/discussions">GitHub Discussions</a></li>
+          <li><a href="https://crates.io/crates/rustdv">rustdv on crates.io</a></li>
+          <li><a href="https://docs.rs/rustdv">API Documentation (docs.rs)</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>About</h4>
+        <ul>
+          <li><a href="journey.html">Built with Claude</a></li>
+          <li><a href="https://www.uvmprimer.com">The UVM Primer</a></li>
+          <li><a href="https://a.co/d/0hTKAJvh">Python for RTL Verification</a></li>
+          <li><a href="https://buymeacoffee.com/raysalemi">Buy Me a Coffee</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Ray Salemi. rustdv is free and open source.</span>
+      <span>rustdv.org</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

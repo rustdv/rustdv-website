@@ -1,0 +1,627 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Analysis Ports - Rust for RTL Verification</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A complete course in Rust and rustdv">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-e96d0476.css">
+        <link rel="stylesheet" href="css/chrome-be44eb3b.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="github-markdown-482a44a1.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-d33968a7.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-113777c1.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Rust for RTL Verification</h1>
+
+                    <div class="right-buttons">
+                        <a href="https://buymeacoffee.com/raysalemi" class="coffee-button" title="Buy me a coffee" aria-label="Buy me a coffee" target="_blank" rel="noopener noreferrer">
+                            <span class="coffee-emoji" aria-hidden="true">&#9749;</span><span class="coffee-label">&nbsp;Buy me a coffee</span>
+                        </a>
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main class="markdown-body">
+                        <h1 id="chapter-32-analysis-ports"><a class="header" href="#chapter-32-analysis-ports">Chapter 32: Analysis Ports</a></h1>
+<p>Chapter 31 moved data from one component to one other component, with back-pressure: a full FIFO makes the producer wait, because a command that is not yet driven must not be dropped. A monitor lives in the opposite world. It observes traffic that has already happened, and it must tell <em>everyone who cares</em> — the scoreboard, the coverage collector, a logger — without being slowed by any of them, and without caring whether anyone is listening at all. That is broadcasting, the other TLM shape, and the UVM gives it its own machinery.</p>
+<blockquote>
+<p><strong>In the UVM…</strong> a monitor holds a <code>uvm_analysis_port</code> and calls <code>ap.write(txn)</code>. Every connected subscriber’s <code>write()</code> method runs — a subscriber extends <code>uvm_subscriber</code> and overrides <code>write()</code> — and the call returns immediately, in zero simulation time, no matter how many subscribers are connected, including none. Scoreboards typically route each incoming stream into a <code>uvm_tlm_analysis_fifo</code>, and a component that needed two streams reached for the <code>uvm_analysis_imp_decl</code> macros.</p>
+</blockquote>
+<p>Analysis is a different mechanism from put/get, not a mode of it: one-to-many, non-blocking, no return value, no back-pressure. Be reassured up front: <strong>rustdv’s analysis layer is a copy of the UVM’s.</strong> The subscribers implement <code>write()</code>, the publisher calls it, and delivery obeys the UVM’s strictest rule — <code>write</code> takes no simulation time <em>(SV: <code>write</code> is a <code>function</code>, never a <code>task</code>; pyuvm: a plain <code>def</code>)</em>. What you know carries over. This chapter builds the layer up in order — the idea, the two ports, the <code>write</code> contract, one shared-state helper — and then runs it, because the parts arrive together in every listing and are easier to read once each has been met alone.</p>
+<h2 id="one-publisher-many-subscribers"><a class="header" href="#one-publisher-many-subscribers">One publisher, many subscribers</a></h2>
+<p>Start with the shape, because everything else in the chapter is machinery for it. One component — the <strong>publisher</strong> — has something to announce. In a real testbench it is a monitor: it has just decoded a bus transaction, and its job is to say so. Several others — the <strong>subscribers</strong> — want to hear it: a scoreboard to compare it against a prediction, a coverage collector to bin it, perhaps a logger to file it. Each does something <em>different</em> with the <em>same</em> item.</p>
+<p>Two properties define the relationship. The publisher does not know its subscribers — not how many there are, not what they do, not whether there are any at all. It announces and moves on. And no subscriber can slow the publisher down or dictate to another: each is handed the item, does its own thing, and has no channel back. That is why analysis has no back-pressure and no return value; a broadcast is not a conversation.</p>
+<p>Everything below is the rustdv spelling of that shape, and the spelling is the UVM’s: a publisher port, subscriber ports, and a <code>write()</code> that fans out in zero time.</p>
+<h2 id="the-two-ports"><a class="header" href="#the-two-ports">The two ports</a></h2>
+<p>The publisher declares a <code>PublishPort&lt;T&gt;</code>; each subscriber declares a <code>SubscribePort&lt;T&gt;</code>. Both are <code>#[port(...)]</code> fields, exactly as in Chapter 31, and the attribute does the same two jobs: it generates the typed name constant the wiring uses, and it enrolls the port in the elaboration report.</p>
+<pre><code class="language-rust ignore">#[port(publish)]
+ap: PublishPort&lt;CmdTuple&gt;,        // the publisher announces here
+
+#[port(subscribe)]
+input: SubscribePort&lt;CmdTuple&gt;,   // a subscriber listens here</code></pre>
+<p>The publisher’s side is all there is on the publisher: it calls <code>self.ap.write(&amp;item)</code> and moves on. Everything else belongs to the subscriber, and a rustdv subscriber is always the same three pieces. The next three sections introduce them one at a time.</p>
+<h2 id="subscriber-what-an-arriving-item-does"><a class="header" href="#subscriber-what-an-arriving-item-does"><code>Subscriber</code>: what an arriving item does</a></h2>
+<p>The first piece is the subscriber’s data: a small struct holding whatever this subscriber keeps. For one subscriber that might be a count; for another, a <code>Vec</code> of the items themselves; for Chapter 34’s scoreboard, the two lists it will compare. This chapter calls it the <strong>state struct</strong>. It is a plain struct, and the subscriber’s real work happens in it.</p>
+<p>The struct’s <code>write()</code> lives there too. <code>Subscriber&lt;T&gt;</code> is a trait with a single method, <code>fn write(&amp;mut self, item: &amp;T)</code> — the port of <code>uvm_subscriber</code>’s <code>write()</code>, the same name doing the same job: it says what an arriving item does. You implement <code>Subscriber</code> <strong>on the state struct</strong> — the count’s <code>write</code> increments the count, the <code>Vec</code>’s <code>write</code> pushes the item. That struct <em>is</em> the subscriber, and this is the one place the vocabulary shifts under a UVM engineer: <code>uvm_subscriber</code> is a component, while rustdv’s <code>Subscriber</code> is plain data that a component hosts — the same lesson this chapter keeps teaching about where storage lives.</p>
+<p>The instinct is to put <code>write()</code> on the hosting component itself, because that is where the UVM puts it. In rustdv it cannot go there, and the reason is ownership. Think about the moment of delivery: the <em>publisher</em> is in the middle of its <code>run</code> phase, and the item has to land in a <em>sibling</em> component’s data, right now, in zero time. Chapter 24’s tree gives nobody <code>&amp;mut</code> access to a sibling — the hosting component is simply unreachable at the moment the item arrives. The state struct is the answer: it lives <em>outside</em> the component, so it can be reached at delivery time. What makes that sharing safe is the second piece.</p>
+<h2 id="a-digression-rustdvshared"><a class="header" href="#a-digression-rustdvshared">A digression: <code>RustdvShared</code></a></h2>
+<p><code>RustdvShared&lt;T&gt;</code> is how the subscriber component and its port both hold the same state struct. It is Chapter 13’s <code>Rc&lt;RefCell&lt;T&gt;&gt;</code> wrapped in a framework type: <code>clone()</code> produces a second handle to the <em>same</em> data — not a copy of it — and <code>get()</code>/<code>get_mut()</code> borrow the data to read or modify, checked at run time as <code>RefCell</code> always is.</p>
+<p>The use never varies. The component declares its state as a field — <code>tally: RustdvShared&lt;ItemCount&gt;</code> — and so holds one handle. During setup it clones a second handle and gives the clone to its port. After that, the two ends never touch each other: the port pours arriving items into the state through its handle, in zero time, without going anywhere near the component; and the component reads through its own handle whenever it likes — usually in <code>check</code> or <code>report</code>, once the traffic is over. One habit keeps it friction-free: take <code>get()</code>’s borrow for a line at a time, never across an <code>await</code>.</p>
+<p>About the name: it wears the <code>Rustdv</code> prefix for the same reason <code>RustdvComp</code> and <code>RustdvCtx</code> do — it is the framework’s type, not the language’s. A reader who goes looking for <code>Shared&lt;T&gt;</code> in the standard library will find nothing; the name says where to look instead.</p>
+<h2 id="subscribe-and-connect"><a class="header" href="#subscribe-and-connect"><code>subscribe</code> and <code>connect</code></a></h2>
+<p>The third piece is the setup, and it is two calls made by two different components:</p>
+<pre><code class="language-rust ignore">// the subscriber, in its own build phase:
+let my_subscriber = self.tally.clone();   // a second handle to the state struct
+self.input.subscribe(my_subscriber);       // "pour arriving items into this"
+
+// the parent, in its connect phase:
+bus.sub_export().connect(&amp;self.counter, Counter::INPUT);</code></pre>
+<p><code>subscribe</code> supplies the receiver. The hosting component hands its port the cloned handle, so the port knows what to pour arriving items into. Only that component can make the call — nobody else holds a handle to its state — which is why it happens in its own <code>build</code>.</p>
+<p><code>connect</code> chooses the stream. It is the parent wiring topology, with exactly the move used for every connection in Chapter 31: it attaches the hosted port to one particular broadcast. The parent decides who hears what; it neither knows nor cares what any subscriber does with an item.</p>
+<p>So the two calls answer two different questions. <code>connect</code>: <em>which items come here?</em> <code>subscribe</code>: <em>what happens when they do?</em> Keep the split straight by who makes each call: the parent <code>connect</code>s, the component <code>subscribe</code>s. Miss one and the failures differ: a port that was never <code>connect</code>ed is legal and silent — the elaboration report lists it as unbound and the subscriber hears nothing — while <code>connect</code>ing a port whose component never called <code>subscribe</code> fails loudly, naming the port and the <code>build</code> phase that owes the call.</p>
+<p>Every subscriber from here to the end of the book is these three pieces — a state struct with a <code>write</code>, a <code>RustdvShared</code> holding it, and the <code>subscribe</code>/<code>connect</code> pair — so the first listing repays a slow read.</p>
+<h2 id="a-counter-and-a-collector"><a class="header" href="#a-counter-and-a-collector">A counter and a collector</a></h2>
+<p>The chapter’s example is deliberately not a TinyALU testbench. It is the publisher/subscriber shape with nothing else in the room: a number generator that publishes <code>0, 1, 2</code>, and two components that hear the same three numbers and do different things with them — a <strong>counter</strong> that keeps a tally, and a <strong>collector</strong> that keeps the values. Chapter 33 will put monitors and scoreboards in these roles; today the data is plain <code>u32</code>s so the machinery has your whole attention.</p>
+<p>Here is the counter, all three pieces of the pattern in one place:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 32, Figure 1: A subscriber counts what it sees
+#[derive(Default)]
+struct ItemCount {
+    count: u32,
+}
+
+impl Subscriber&lt;u32&gt; for ItemCount {
+    fn write(&amp;mut self, _item: &amp;u32) {
+        self.count += 1;
+    }
+}
+
+#[derive(Component, Default)]
+struct Counter {
+    #[port(subscribe)]
+    input: SubscribePort&lt;u32&gt;,
+    tally: RustdvShared&lt;ItemCount&gt;,
+}
+
+impl Component for Counter {
+    fn build(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        let my_subscriber = self.tally.clone();
+        self.input.subscribe(my_subscriber);
+    }
+
+    fn report(&amp;mut self, ctx: &amp;mut RustdvCtx) {
+        let tally = self.tally.get();
+        ctx.info(&amp;format!("counted {} items", tally.count));
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>All three pieces are here. <code>ItemCount</code> is the state struct and the subscriber — <code>Subscriber</code> is implemented there, and its <code>write</code> bumps the count, instantly, nothing awaited. <code>Counter</code> is the component hosting it: it declares the <code>SubscribePort</code>, keeps one <code>RustdvShared</code> handle in <code>tally</code>, and in <code>build</code> hands a clone of that handle to <code>subscribe</code>. In <code>report</code>, it reads the same state back through <code>get()</code>. The component never sees an item arrive; arrival goes straight into <code>ItemCount</code>, and the component and the port simply share it.</p>
+<p>The collector is the same pattern with different state — a <code>Vec</code> where the counter had a number:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 32, Figure 2: A second subscriber on the same stream
+#[derive(Default)]
+struct SeenList {
+    items: Vec&lt;u32&gt;,
+}
+
+impl Subscriber&lt;u32&gt; for SeenList {
+    fn write(&amp;mut self, item: &amp;u32) {
+        self.items.push(*item);
+    }
+}
+
+#[derive(Component, Default)]
+struct Collector {
+    #[port(subscribe)]
+    input: SubscribePort&lt;u32&gt;,
+    seen: RustdvShared&lt;SeenList&gt;,
+}
+
+impl Component for Collector {
+    fn build(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        let my_subscriber = self.seen.clone();
+        self.input.subscribe(my_subscriber);
+    }
+
+    fn report(&amp;mut self, ctx: &amp;mut RustdvCtx) {
+        let seen = self.seen.get();
+        ctx.info(&amp;format!("collected {:?}", seen.items));
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>A tally in one, a <code>Vec</code> in the other. Keep that difference in mind; it is about to become the chapter’s thesis.</p>
+<h2 id="the-source-and-the-broadcast"><a class="header" href="#the-source-and-the-broadcast">The source and the broadcast</a></h2>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 32, Figure 3: A source holds an analysis port and writes to it
+#[derive(Component, Default)]
+struct NumberGen {
+    #[port(publish)]
+    ap: PublishPort&lt;u32&gt;,
+}
+
+impl Component for NumberGen {
+    async fn run(&amp;mut self, ctx: &amp;mut RustdvCtx) -&gt; Result&lt;(), TestError&gt; {
+        let _obj = ctx.raise_objection("generating");
+        for n in 0..3 {
+            self.ap.write(&amp;n); // broadcast; non-blocking
+            ctx.info(&amp;format!("wrote {n}"));
+        }
+        Ok(())
+    }
+}
+<span class="boring">}</span></code></pre>
+<p><code>write</code> takes a reference, returns immediately, and is not <code>async</code> — there is nothing to await, because delivery is synchronous and takes zero simulation time. The publisher does not block, does not learn how many subscribers heard it, and does not care.</p>
+<p>What connects a publisher to its subscribers is an <code>AnalysisBus</code> — the hub that brokers the broadcast:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 32, Figure 4: One publisher, two subscribers, one hub
+#[rustdv::test]
+#[derive(Component, Default)]
+struct BroadcastTest {
+    #[component]
+    source: RustdvComp,
+    #[component]
+    counter: RustdvComp,
+    #[component]
+    collector: RustdvComp,
+    #[component]
+    bus: AnalysisBus&lt;u32&gt;,
+}
+
+impl Component for BroadcastTest {
+    fn build(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        self.source = NumberGen::new_comp();
+        self.counter = Counter::new_comp();
+        self.collector = Collector::new_comp();
+        self.bus = AnalysisBus::new();
+    }
+
+    fn connect(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        self.bus.pub_export().connect(&amp;self.source, NumberGen::AP);
+        self.bus.sub_export().connect(&amp;self.counter, Counter::INPUT);
+        self.bus.sub_export().connect(&amp;self.collector, Collector::INPUT);
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>The wiring reads exactly like Chapter 31’s: a concrete <code>#[component]</code> child, a named export, <code>connect(component, PORT_NAME)</code>. The publisher’s port goes to <code>pub_export()</code>; every subscriber goes to the <em>same</em> <code>sub_export()</code>, and connecting several is what makes the write fan out. One connection idiom for both TLM shapes is a deliberate rustdv choice — the UVM broadcasts straight from port to subscribers with no intermediary, but with both endpoints factory-erased, neither side could drive the call, and one idiom for the reader to learn beats two.</p>
+<pre><code class="language-text"># Figure 5: One write, every subscriber hears it — all in zero time
+
+      0.00ns INFO     running BroadcastTest (1/4)  [ch32-analysis-ports/src/ch32_analysis_ports.rs:193]
+      0.00ns INFO     [BroadcastTest.source]: wrote 0
+      0.00ns INFO     [BroadcastTest.source]: wrote 1
+      0.00ns INFO     [BroadcastTest.source]: wrote 2
+      0.00ns INFO     [BroadcastTest.counter]: counted 3 items
+      0.00ns INFO     [BroadcastTest.collector]: collected [0, 1, 2]
+      0.00ns INFO     BroadcastTest PASSED
+</code></pre>
+<p>Every line is at <code>0.00ns</code>. Three writes, both subscribers fully served, and the simulation clock never moved — that is the contract <code>write</code> keeps. And note where the results came from when <code>report</code> ran: the counter read its <code>ItemCount</code> and the collector its <code>SeenList</code>, each through the same <code>RustdvShared</code> handle whose clone its port had been delivering into all along. The shared state is the join between the zero-time world of <code>write</code> and the component that eventually wants the answer.</p>
+<h2 id="the-bus-stores-nothing"><a class="header" href="#the-bus-stores-nothing">The bus stores nothing</a></h2>
+<p>Despite living in a <code>#[component]</code> slot, <strong>an <code>AnalysisBus</code> is not a FIFO and stores no items.</strong> It is a subscriber list and nothing more: <code>write</code> calls every enrolled subscriber and returns, connecting function calls rather than holding data, and a datum broadcast to nobody is <em>gone</em>.</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 32, Figure 6: A hub with no subscribers is legal
+#[rustdv::test]
+#[derive(Component, Default)]
+struct NoSubscribersTest {
+    #[component]
+    source: RustdvComp,
+    #[component]
+    bus: AnalysisBus&lt;u32&gt;,
+}
+
+impl Component for NoSubscribersTest {
+    fn build(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        self.source = NumberGen::new_comp();
+        self.bus = AnalysisBus::new();
+    }
+
+    fn connect(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        self.bus.pub_export().connect(&amp;self.source, NumberGen::AP);
+        // no sub_export() connection — legal for analysis
+    }
+}
+<span class="boring">}</span></code></pre>
+<pre><code class="language-text"># Figure 7: Broadcasting into the void
+
+      0.00ns INFO     running NoSubscribersTest (2/4)  [ch32-analysis-ports/src/ch32_analysis_ports.rs:231]
+      0.00ns INFO     [NoSubscribersTest.source]: wrote 0
+      0.00ns INFO     [NoSubscribersTest.source]: wrote 1
+      0.00ns INFO     [NoSubscribersTest.source]: wrote 2
+      0.00ns INFO     NoSubscribersTest PASSED
+</code></pre>
+<p>Where Chapter 31’s unconnected put port failed elaboration, an analysis <code>sub_export()</code> has minimum cardinality zero: broadcasting to nobody is a valid state — a monitor in a block-level environment reused at chip level may well have no one listening — so this elaborates and runs clean. And the storing-nothing rule is the mechanism, not a limitation of it: a broadcast hub that stored what nobody wanted would grow forever, with the monitor paying for listeners it does not have.</p>
+<p>So “where does the traffic go?” has a simple answer: <strong>wherever the subscriber decides to put it.</strong> A tally (figure 1), a <code>Vec</code> (figure 2), a comparison against a prediction (Chapter 34’s scoreboard) — the subscriber owns its storage, held in its <code>RustdvShared</code> state and shaped to its job. If you find yourself looking for the analysis FIFO, this paragraph is the answer: there isn’t one, and nothing is missing.</p>
+<p>It is worth being precise about what that replaces, because the UVM’s scoreboards buffer for a reason that is real <em>there</em>. A SystemVerilog class gets exactly one <code>write()</code> method. A scoreboard watching two streams — commands and results — therefore needs the <code>uvm_analysis_imp_decl</code> macros to mint two differently-named writes, and routing each stream into its own <code>uvm_tlm_analysis_fifo</code> is the standard way around the whole problem; pyuvm, with one <code>write</code> per class, routes into FIFOs for the same reason. A rustdv component declares two <code>SubscribePort</code>s and hosts two <code>Subscriber</code> impls, one per stream — you will see it done in Chapter 34’s scoreboard — so the workaround has nothing to work around, and the buffer that lived in every UVM scoreboard is simply absent. (Hence the name <code>AnalysisBus</code>: the type is the broadcast hub, a thing the UVM has no class for at all — emphatically not an analysis FIFO, which in the UVM names the subscriber-side buffer this design does without.)</p>
+<h2 id="when-the-subscriber-needs-time"><a class="header" href="#when-the-subscriber-needs-time">When the subscriber needs time</a></h2>
+<p>One legitimate reason to buffer remains, and it has nothing to do with <code>imp_decl</code>: <strong><code>write</code> cannot take simulation time.</strong> It is synchronous, called from the publisher’s <code>run</code>, and it is not <code>async</code> — no <code>await</code> is possible inside it. Bumping a counter fits. Consulting a slow reference model, driving a bus, waiting on the DUT does not. A subscriber whose real work takes time splits the job in two:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 32, Figure 8: When the subscriber needs *time*
+#[derive(Default)]
+struct Inbox {
+    queue: TlmFifo&lt;u32&gt;,
+}
+
+impl Subscriber&lt;u32&gt; for Inbox {
+    fn write(&amp;mut self, item: &amp;u32) {
+        let _ = self.queue.try_put(*item);
+    }
+}
+
+#[derive(Component, Default)]
+struct SlowChecker {
+    #[port(subscribe)]
+    input: SubscribePort&lt;u32&gt;,
+    inbox: RustdvShared&lt;Inbox&gt;,
+}
+
+impl Component for SlowChecker {
+    fn build(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        self.inbox = RustdvShared::new(Inbox { queue: TlmFifo::unbounded() });
+        let my_inbox = self.inbox.clone();
+        self.input.subscribe(my_inbox);
+    }
+
+    async fn run(&amp;mut self, ctx: &amp;mut RustdvCtx) -&gt; Result&lt;(), TestError&gt; {
+        let _obj = ctx.raise_objection("checking");
+        let my_queue = self.inbox.get().queue.handle();
+        for _ in 0..3 {
+            let n = my_queue.get().await;
+            Timer::ns(5).await; // the slow work `write` could not have done
+            ctx.info(&amp;format!("checked {n}"));
+        }
+        Ok(())
+    }
+}
+<span class="boring">}</span></code></pre>
+<p><code>write</code> does the one thing it can do instantly — <code>try_put</code> into a <code>TlmFifo</code> the subscriber owns — and the component’s <code>run</code>, which may await all it likes, takes it from there. Three details repay attention:</p>
+<ul>
+<li><strong>The FIFO is connected to no port.</strong> A reader fresh from Chapter 31 will expect every <code>TlmFifo</code> to be wired in <code>connect</code>; this one is an ordinary handoff <em>inside</em> one component, between a synchronous method and an asynchronous one. It is not part of the testbench topology.</li>
+<li><strong>The inbox must be unbounded.</strong> <code>write</code> has no way to wait for space, and analysis has no back-pressure to push back with — so a <em>bounded</em> inbox here would be a bug that could only drop items. <code>TlmFifo::unbounded()</code> is the honest declaration of what analysis traffic is.</li>
+<li><strong>The handle is taken once, before the loop.</strong> Holding the shared borrow (<code>self.inbox.get()</code>) across an <code>await</code> would keep the state locked exactly when <code>write</code> needs it; taking a queue handle first keeps the two halves out of each other’s way.</li>
+</ul>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 32, Figure 9: The publisher does not wait for the slow subscriber
+#[rustdv::test]
+#[derive(Component, Default)]
+struct SlowSubscriberTest {
+    #[component]
+    source: RustdvComp,
+    #[component]
+    checker: RustdvComp,
+    #[component]
+    bus: AnalysisBus&lt;u32&gt;,
+}
+
+impl Component for SlowSubscriberTest {
+    fn build(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        self.source = NumberGen::new_comp();
+        self.checker = SlowChecker::new_comp();
+        self.bus = AnalysisBus::new();
+    }
+
+    fn connect(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        self.bus.pub_export().connect(&amp;self.source, NumberGen::AP);
+        self.bus.sub_export().connect(&amp;self.checker, SlowChecker::INPUT);
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>Nothing in the wiring says this subscriber buffers — the same <code>sub_export()</code> as any other. That is the checker’s own business, which is the point.</p>
+<pre><code class="language-text"># Figure 10: Writes at 0ns; checks at 5, 10, 15
+
+      0.00ns INFO     running SlowSubscriberTest (3/4)  [ch32-analysis-ports/src/ch32_analysis_ports.rs:325]
+      0.00ns INFO     [SlowSubscriberTest.source]: wrote 0
+      0.00ns INFO     [SlowSubscriberTest.source]: wrote 1
+      0.00ns INFO     [SlowSubscriberTest.source]: wrote 2
+      5.00ns INFO     [SlowSubscriberTest.checker]: checked 0
+     10.00ns INFO     [SlowSubscriberTest.checker]: checked 1
+     15.00ns INFO     [SlowSubscriberTest.checker]: checked 2
+     15.00ns INFO     SlowSubscriberTest PASSED
+</code></pre>
+<p>The transcript is the argument. All three writes land at <code>0.00ns</code> — the publisher is never held up by what a subscriber does with an item — and the checker’s results come out at 5, 10, and 15ns as it works through its own queue in its own time.</p>
+<h2 id="the-fifos-built-in-taps"><a class="header" href="#the-fifos-built-in-taps">The FIFO’s built-in taps</a></h2>
+<p>One piece of analysis machinery was left unexplained in Chapter 31, because it could not be explained before subscribers were: every <code>TlmFifo</code> carries a pair of publisher ports of its own. <code>put_ap()</code> announces each item the FIFO accepts; <code>get_ap()</code> announces each item it releases. They are the port of <code>uvm_tlm_fifo</code>’s built-in analysis ports — the same two names there — and they exist for the same reason: the components on a FIFO’s data path are not the only ones with an interest in its traffic. A scoreboard may want to see every command a driver will eventually consume; a coverage collector may want to bin items as they pass through. The taps let them watch without joining the queue.</p>
+<p>There is nothing new to learn to use one. A watcher on a tap is the same shape as figure 1’s counter — a plain struct implementing <code>Subscriber</code>, a <code>SubscribePort</code>, and a <code>subscribe</code> call in the build phase:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 32, Figure 11: A watcher on a FIFO's tap is an ordinary subscriber
+#[derive(Default)]
+struct TapLog {
+    items: Vec&lt;u32&gt;,
+}
+
+impl Subscriber&lt;u32&gt; for TapLog {
+    fn write(&amp;mut self, item: &amp;u32) {
+        self.items.push(*item);
+    }
+}
+
+#[derive(Component, Default)]
+struct TapWatcher {
+    #[port(subscribe)]
+    input: SubscribePort&lt;u32&gt;,
+    seen: RustdvShared&lt;TapLog&gt;,
+}
+
+impl Component for TapWatcher {
+    fn build(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        let my_subscriber = self.seen.clone();
+        self.input.subscribe(my_subscriber);
+    }
+
+    fn report(&amp;mut self, ctx: &amp;mut RustdvCtx) {
+        let seen = self.seen.get();
+        ctx.info(&amp;format!("tap saw {:?}", seen.items));
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>To give the tap something to watch, the test reuses Chapter 31’s <code>Producer</code> and <code>Consumer</code> verbatim — the producer that blocks on a full FIFO, the consumer that peeks and then gets. They are not reprinted here; the data path is Chapter 31’s, unchanged. What is new is one line of wiring:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 32, Figure 12: A tap is wired like any other subscription
+#[rustdv::test]
+#[derive(Component, Default)]
+struct FifoTapTest {
+    #[component]
+    producer: RustdvComp,
+    #[component]
+    consumer: RustdvComp,
+    #[component]
+    watcher: RustdvComp,
+    #[component]
+    fifo: TlmFifo&lt;u32&gt;,
+}
+
+impl Component for FifoTapTest {
+    fn build(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        self.producer = Producer::new_comp();
+        self.consumer = Consumer::new_comp();
+        self.watcher = TapWatcher::new_comp();
+        self.fifo = TlmFifo::new(1);
+    }
+
+    fn connect(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        // the data path: producer -&gt; queue -&gt; consumer
+        self.fifo.put_export().connect(&amp;self.producer, Producer::PUT_PORT);
+        self.fifo.peek_export().connect(&amp;self.consumer, Consumer::PEEK_PORT);
+        self.fifo.get_export().connect(&amp;self.consumer, Consumer::GET_PORT);
+        // the observation tap: the watcher sees every item put, and takes none
+        self.fifo.put_ap().connect(&amp;self.watcher, TapWatcher::INPUT);
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>Note what is and is not mixed here. The FIFO’s <strong>data path</strong> is still a queue: one consumer takes each item, and the producer blocks when it is full — this one holds a single item, so the transcript below alternates put and got. The taps are <strong>observation</strong> running alongside: every subscriber sees every item, nothing is consumed, and nobody is delayed. Two different jobs in one component, exactly as the UVM has it. And there is no <code>AnalysisBus</code> in the wiring, because the FIFO already is the hub for its own taps — <code>put_ap()</code> takes the watcher’s port directly, in the same export-owner-name idiom as every other connection on the page.</p>
+<pre><code class="language-text"># Figure 13: Every item put, observed and not consumed
+
+     15.00ns INFO     running FifoTapTest (4/4)  [ch32-analysis-ports/src/ch32_analysis_ports.rs:444]
+     15.00ns INFO     [FifoTapTest.producer]: put 0
+     15.00ns INFO     [FifoTapTest.consumer]: got 0
+     15.00ns INFO     [FifoTapTest.producer]: put 1
+     15.00ns INFO     [FifoTapTest.consumer]: got 1
+     15.00ns INFO     [FifoTapTest.producer]: put 2
+     15.00ns INFO     [FifoTapTest.consumer]: got 2
+     15.00ns INFO     [FifoTapTest.watcher]: tap saw [0, 1, 2]
+     15.00ns INFO     FifoTapTest PASSED
+</code></pre>
+<p>The consumer got each item exactly once — the queue’s contract, intact. The watcher’s report says <code>tap saw [0, 1, 2]</code>: every item put, observed on the way in, and none of them taken. Had the test connected <code>get_ap()</code> instead, the log would read the same for this traffic — items released rather than accepted — and a component with an interest in both edges can subscribe to both.</p>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>Analysis is one publisher and many subscribers: the publisher <code>write</code>s, every subscriber’s <code>write()</code> runs, delivery is synchronous and free, and zero listeners is legal — the UVM’s analysis layer, carried over whole, including the rule that <code>write</code> takes no time. A subscriber is a plain struct implementing <code>Subscriber</code> on the state its <code>write</code> updates — <code>uvm_subscriber</code> is a component; rustdv’s subscriber is data a component hosts — shared between component and port with a <code>RustdvShared</code> handle and attached twice: <code>subscribe</code> in the component’s own <code>build</code> says what an arriving item does, <code>connect</code> in the parent’s <code>connect</code> phase says whose traffic it hears. Two streams means two ports and two <code>Subscriber</code> impls, no macros. The <code>AnalysisBus</code> brokers the fan-out with the same connect idiom as every other wiring in the book, and it stores nothing: the subscriber owns the storage, shaped to its job, and the only reason to make that storage a queue is time — <code>write</code> cannot await, so a slow subscriber front-ends its <code>run</code> with an unbounded inbox and lets the transcript show writes at zero and checks at leisure. And every <code>TlmFifo</code> publishes on two taps of its own, <code>put_ap()</code> and <code>get_ap()</code> — observation running alongside a data path that still blocks when full and still hands each item to exactly one consumer.</p>
+<p>Testbench 6.0 now has everything it needs: components that talk point-to-point, monitors that broadcast, and a scoreboard that subscribes to two streams at once. Chapter 33 builds those components; Chapter 34 wires them to the TinyALU.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="chapter-31-component-communications.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="chapter-33-components-testbench-6.0.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="chapter-31-component-communications.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="chapter-33-components-testbench-6.0.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-09f2665d.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

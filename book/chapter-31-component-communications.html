@@ -1,0 +1,660 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Component Communications - Rust for RTL Verification</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A complete course in Rust and rustdv">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-e96d0476.css">
+        <link rel="stylesheet" href="css/chrome-be44eb3b.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="github-markdown-482a44a1.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-d33968a7.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-113777c1.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Rust for RTL Verification</h1>
+
+                    <div class="right-buttons">
+                        <a href="https://buymeacoffee.com/raysalemi" class="coffee-button" title="Buy me a coffee" aria-label="Buy me a coffee" target="_blank" rel="noopener noreferrer">
+                            <span class="coffee-emoji" aria-hidden="true">&#9749;</span><span class="coffee-label">&nbsp;Buy me a coffee</span>
+                        </a>
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main class="markdown-body">
+                        <h1 id="chapter-31-component-communications"><a class="header" href="#chapter-31-component-communications">Chapter 31: Component Communications</a></h1>
+<p>Testbench 5.0 ended with an environment that builds its components through the factory — and with those components still doing their talking through the BFM’s queues, as they have since version 1.0. That worked because our components sat directly on the DUT’s traffic. It stops working the moment one <em>testbench</em> component needs to hand data to another: the tester to a driver, a monitor to a scoreboard. Wire them directly and each must know the other’s type, which un-does everything the factory just bought us. The UVM’s answer is transaction-level connection — TLM — and this chapter ports its point-to-point half: ports, exports, and the FIFO between them.</p>
+<blockquote>
+<p><strong>In the UVM…</strong> we connected components with TLM-1 machinery: <code>uvm_blocking_put_port</code> and its export on the far side, <code>uvm_get_port</code>, the nonblocking and peek variants, each wired with <code>connect()</code> calls in <code>connect_phase</code> — and a runtime error (pyuvm’s <code>UVMTLMConnectionError</code>, SV’s elaboration-time connection fatal) when the wiring was wrong. A <code>uvm_tlm_fifo</code> sat between a producer’s put port and a consumer’s get port.</p>
+</blockquote>
+<p>The model, in one paragraph, because every listing in this chapter is an instance of it. A <strong>port</strong> is the thing a component <em>calls</em>: <code>put</code>, <code>get</code>, <code>peek</code>, each in a blocking form that waits and a <code>try_</code> form that does not. The port forwards to an <strong>export</strong> on the far side. The export belongs to a <strong>FIFO</strong>, which owns the queue and implements every capability against it. And here is the part that makes it architecture rather than plumbing: the producer connects to the FIFO, the consumer connects to the FIFO, and <em>neither ever learns the other exists</em>. The FIFO is the point of decoupling. Swap the consumer through a factory override and the producer neither knows nor cares — which is precisely why this chapter had to come after the factory.</p>
+<h2 id="blocking-put-get-and-peek"><a class="header" href="#blocking-put-get-and-peek">Blocking put, get, and peek</a></h2>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 31, Figure 1: A producer holds a put port and blocks on a full FIFO
+#[derive(Component, Default)]
+struct Producer {
+    #[port(put)]
+    put_port: PutPort&lt;u32&gt;,
+}
+
+impl Component for Producer {
+    async fn run(&amp;mut self, ctx: &amp;mut RustdvCtx) -&gt; Result&lt;(), TestError&gt; {
+        let _obj = ctx.raise_objection("producing");
+        for n in 0..3 {
+            self.put_port.put(n).await; // blocks while the FIFO is full
+            ctx.info(&amp;format!("put {n}"));
+        }
+        Ok(())
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>Two new pieces of vocabulary:</p>
+<ul>
+<li><code>#[port(put)]</code> — the attribute declares this field to the derive as a port, which does two jobs at once: it makes the port reachable <em>by name</em> when the environment wires it (you will see how in figure 3), and it enrolls the port in the end-of-elaboration connection check (figure 14 shows what that buys).</li>
+<li><code>self.put_port.put(n).await</code> — a blocking put, in the coroutine sense both source frameworks use: the producer’s run phase is suspended, in simulated time, until the FIFO has room.</li>
+</ul>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 31, Figure 2: A consumer that peeks, then gets
+#[derive(Component, Default)]
+struct Consumer {
+    #[port(peek)]
+    peek_port: PeekPort&lt;u32&gt;,
+    #[port(get)]
+    get_port: GetPort&lt;u32&gt;,
+}
+
+impl Component for Consumer {
+    async fn run(&amp;mut self, ctx: &amp;mut RustdvCtx) -&gt; Result&lt;(), TestError&gt; {
+        let _obj = ctx.raise_objection("consuming");
+        for _ in 0..3 {
+            let seen = self.peek_port.peek().await; // blocks while empty; no consume
+            ctx.info(&amp;format!("peeked {seen}"));
+            let got = self.get_port.get().await; // consumes the peeked item
+            assert_eq!(seen, got, "peek must not consume the item");
+            ctx.info(&amp;format!("got {got}"));
+        }
+        Ok(())
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>The consumer declares <em>two</em> ports and wires both to the same FIFO: <code>peek</code> returns the next item without consuming it, blocking until one is there, and <code>get</code> then consumes that same item. The <code>assert_eq!</code> makes the “peek does not consume” contract executable rather than documentary.</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 31, Figure 3: The env builds the two components and a FIFO, then
+// wires them in `connect`
+#[rustdv::test]
+#[derive(Component, Default)]
+struct PutGetPeekTest {
+    #[component]
+    producer: RustdvComp,
+    #[component]
+    consumer: RustdvComp,
+    #[component]
+    fifo: TlmFifo&lt;u32&gt;,
+}
+
+impl Component for PutGetPeekTest {
+    fn build(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        self.producer = Producer::new_comp();
+        self.consumer = Consumer::new_comp();
+        self.fifo = TlmFifo::new(1); // depth 1 — forces the producer to wait
+    }
+
+    fn connect(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        self.fifo.put_export().connect(&amp;self.producer, Producer::PUT_PORT);
+        self.fifo.peek_export().connect(&amp;self.consumer, Consumer::PEEK_PORT);
+        self.fifo.get_export().connect(&amp;self.consumer, Consumer::GET_PORT);
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>This is <code>connect</code> doing the job Chapter 24 gave it, and each line deserves unpacking, because the shape is subtler than it looks.</p>
+<ul>
+<li>The children are <code>RustdvComp</code> — factory-built, type-erased, exactly as testbench 5.0 left them. Which means the parent <em>cannot</em> write <code>self.producer.put_port</code>: that field does not exist on a <code>RustdvComp</code>, and Rust has no <code>$cast</code>-to-concrete to recover it. Something else must make the port reachable.</li>
+<li>That something is the port name. <code>#[port(put)]</code> on <code>Producer</code> generated an associated constant, <code>Producer::PUT_PORT</code>, and the derive taught <code>ComponentNode</code> to answer for it — through the same trait-object surface everything else uses. The export initiates: <code>fifo.put_export().connect(&amp;self.producer, Producer::PUT_PORT)</code> says <em>this FIFO’s put side serves that component’s port of this name</em>.</li>
+<li>The name is typed, not a string. <code>Producer::PUT_PORT</code> carries the port’s interface in its type, so misspelling it does not compile, and aiming a <code>get</code> export at a <code>put</code> port does not compile either. What resolves at elaboration is the wiring; what the wiring <em>means</em> was settled earlier.</li>
+<li>The FIFO itself is a <code>#[component]</code> child — concrete, not factory-erased, so its exports are reachable to call <code>connect</code> on. That is a deliberate carve-out, and it is the model closest to the UVM, where <code>uvm_tlm_fifo</code> is a real component with a path: a FIFO is plumbing. You will never override one through the factory, so it never pays the erasure that makes overriding possible.</li>
+</ul>
+<p>There is one more thing to notice: the <em>same</em> <code>connect</code> call works when a component wires its own port. Figure 12 will show <code>connect(self, MathTest::X_OUT)</code> — <code>self</code>, not a child. That is not luck; it rules out a whole family of designs. A registry keyed by hierarchical path, say, could reach a child but never the connecting component itself, because a component does not know its own path. A mechanism that works for a child but needs a second spelling for <code>self</code> has broken the UVM’s uniformity — the property that <code>uvm_test</code> <em>is</em> a <code>uvm_component</code>, no cases, no exceptions. A trait method answers for whoever implements the trait, which is every component including the one doing the connecting. That uniformity is why connection is a trait method and not a lookup.</p>
+<pre><code class="language-text"># Figure 4: Alternating through a depth-1 FIFO
+
+      0.00ns INFO     running PutGetPeekTest (1/4)  [ch31-component-communications/src/ch31_component_communications.rs:124]
+      0.00ns INFO     [PutGetPeekTest.producer]: put 0
+      0.00ns INFO     [PutGetPeekTest.consumer]: peeked 0
+      0.00ns INFO     [PutGetPeekTest.consumer]: got 0
+      0.00ns INFO     [PutGetPeekTest.producer]: put 1
+      0.00ns INFO     [PutGetPeekTest.consumer]: peeked 1
+      0.00ns INFO     [PutGetPeekTest.consumer]: got 1
+      0.00ns INFO     [PutGetPeekTest.producer]: put 2
+      0.00ns INFO     [PutGetPeekTest.consumer]: peeked 2
+      0.00ns INFO     [PutGetPeekTest.consumer]: got 2
+      0.00ns INFO     PutGetPeekTest PASSED
+</code></pre>
+<p>Read the interleaving. The FIFO holds one item, so the producer <em>cannot</em> run ahead: put, peek, get, put, peek, get. Two run phases are taking turns in simulated time — which means two run phases are running <em>at once</em>. This is the payoff Chapter 24 promised: a producer blocked on a full FIFO can only proceed because the consumer’s run phase is live to drain it. A phaser that ran components to completion one at a time would deadlock on this listing — the simplest one in the chapter.</p>
+<h2 id="nonblocking-put-and-get"><a class="header" href="#nonblocking-put-and-get">Nonblocking put and get</a></h2>
+<p>The blocking forms wait; the <code>try_</code> forms answer immediately and let the component decide what to do about “no.” The examples switch from <code>u32</code> to a transaction with something to lose:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// A transaction, not an integer
+#[derive(Debug)]
+struct Packet {
+    n: u32,
+    label: String,
+}
+
+impl Packet {
+    fn new(n: u32) -&gt; Packet {
+        Packet { n, label: format!("pkt{n}") }
+    }
+}
+<span class="boring">}</span></code></pre>
+<p><code>Packet</code> owns a <code>String</code>, so it is not <code>Copy</code> — like every real transaction you will ever put on a port. The figures below are written against it deliberately; a <code>u32</code> would let a retry loop compile that falls apart the moment you substitute your own command type.</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 31, Figure 5: A non-blocking producer never waits
+#[derive(Component, Default)]
+struct NbProducer {
+    #[port(put)]
+    put_port: PutPort&lt;Packet&gt;,
+}
+
+impl Component for NbProducer {
+    async fn run(&amp;mut self, ctx: &amp;mut RustdvCtx) -&gt; Result&lt;(), TestError&gt; {
+        let _obj = ctx.raise_objection("producing (nb)");
+        for n in 0..3 {
+            let mut packet = Packet::new(n);
+            while let Err(back) = self.put_port.try_put(packet) {
+                ctx.info("FIFO full, retrying");
+                Timer::ns(1).await;
+                packet = back; // the FIFO gave it back; try again with it
+            }
+            ctx.info(&amp;format!("put {n}"));
+        }
+        Ok(())
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>Read the <code>Err</code> binding slowly, because this signature is the chapter’s best lesson in how ownership shapes an API. The UVM’s <code>try_put</code> returns a <em>bit</em>. It can, because SystemVerilog passes a class handle and the caller still holds its own; a refused put costs nothing. rustdv’s <code>try_put</code> takes the packet <strong>by value</strong> — it must, since a successful put hands the packet to whoever gets it next — and so a bare “no” would have <em>eaten</em> a packet that was never delivered. The signature has to be <code>Result&lt;(), T&gt;</code>: <code>Err(back)</code> is the packet coming home, and <code>packet = back</code> is the retry loop taking it back for the next attempt.</p>
+<p>Two things to be clear about. First, this is not Rust catching a bug SystemVerilog has. SystemVerilog has no bug here; it has a different ownership model, and each signature is the correct one for its model. Second, the tempting way to write the loop — <code>while self.put_port.try_put(packet).is_err()</code> — does not compile, because <code>packet</code> moved into the first attempt and is gone by the second. The compiler is not being difficult; it is asking the question the design already answered: <em>if the put failed, who has the packet?</em> The <code>Err</code> binding is the answer.</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 31, Figure 6: A non-blocking consumer
+#[derive(Component, Default)]
+struct NbConsumer {
+    #[port(get)]
+    get_port: GetPort&lt;Packet&gt;,
+}
+
+impl Component for NbConsumer {
+    async fn run(&amp;mut self, ctx: &amp;mut RustdvCtx) -&gt; Result&lt;(), TestError&gt; {
+        let _obj = ctx.raise_objection("consuming (nb)");
+        let mut seen = 0;
+        while seen &lt; 3 {
+            match self.get_port.try_get() {
+                Some(packet) =&gt; {
+                    ctx.info(&amp;format!("got {} (n={})", packet.label, packet.n));
+                    seen += 1;
+                }
+                None =&gt; Timer::ns(1).await,
+            }
+        }
+        Ok(())
+    }
+}
+<span class="boring">}</span></code></pre>
+<p><code>try_get</code> returns <code>Option&lt;Packet&gt;</code> for the mirror-image reason: a get either hands you the whole packet — label and all, the consumer now owns it and the FIFO no longer does — or hands you nothing. There is no third state in which a packet exists but nobody owns it.</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 31, Figure 7: Same wiring, non-blocking components
+#[rustdv::test]
+#[derive(Component, Default)]
+struct NonBlockingTest {
+    #[component]
+    producer: RustdvComp,
+    #[component]
+    consumer: RustdvComp,
+    #[component]
+    fifo: TlmFifo&lt;Packet&gt;,
+}
+
+impl Component for NonBlockingTest {
+    fn build(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        self.producer = NbProducer::new_comp();
+        self.consumer = NbConsumer::new_comp();
+        self.fifo = TlmFifo::new(1);
+    }
+
+    fn connect(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        self.fifo.put_export().connect(&amp;self.producer, NbProducer::PUT_PORT);
+        self.fifo.get_export().connect(&amp;self.consumer, NbConsumer::GET_PORT);
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>The FIFO now carries <code>Packet</code> rather than <code>u32</code>, and not one connect line changed shape — the generic FIFO doing its job. (And the typed port name doing its job too: connect this <code>TlmFifo&lt;Packet&gt;</code> to a port that wants <code>u32</code> and the mistake fails to compile.)</p>
+<pre><code class="language-text"># Figure 8: Nonblocking components spend time instead of waiting
+
+      0.00ns INFO     running NonBlockingTest (2/4)  [ch31-component-communications/src/ch31_component_communications.rs:247]
+      0.00ns INFO     [NonBlockingTest.producer]: put 0
+      0.00ns INFO     [NonBlockingTest.producer]: FIFO full, retrying
+      0.00ns INFO     [NonBlockingTest.consumer]: got pkt0 (n=0)
+      1.00ns INFO     [NonBlockingTest.producer]: put 1
+      1.00ns INFO     [NonBlockingTest.producer]: FIFO full, retrying
+      1.00ns INFO     [NonBlockingTest.consumer]: got pkt1 (n=1)
+      2.00ns INFO     [NonBlockingTest.producer]: put 2
+      2.00ns INFO     [NonBlockingTest.consumer]: got pkt2 (n=2)
+      2.00ns INFO     NonBlockingTest PASSED
+</code></pre>
+<p>Same three packets, but now the clock moves: each retry burns a nanosecond of <code>Timer</code> instead of suspending on the FIFO. Blocking components let the FIFO schedule them; nonblocking components schedule themselves.</p>
+<h2 id="the-parent-runs-too-a-three-stage-pipeline"><a class="header" href="#the-parent-runs-too-a-three-stage-pipeline">The parent runs too: a three-stage pipeline</a></h2>
+<p>Everything so far had a parent that only built and connected. The next test is the chapter’s centerpiece, and the reason is architectural: <strong>the test itself is a stage</strong>.</p>
+<figure>
+<svg viewbox="0 0 640 220" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="13">
+  <defs>
+    <marker id="arr" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#888" />
+    </marker>
+  </defs>
+  <rect x="20" y="60" width="130" height="100" rx="8" fill="none" stroke="#888" stroke-width="1.5" />
+  <text x="85" y="85" text-anchor="middle" fill="currentColor" font-weight="bold">MathTest</text>
+  <text x="85" y="103" text-anchor="middle" fill="currentColor" font-style="italic">run: put x,</text>
+  <text x="85" y="119" text-anchor="middle" fill="currentColor" font-style="italic">get y,</text>
+  <text x="85" y="135" text-anchor="middle" fill="currentColor" font-style="italic">compare 2x²</text>
+  <rect x="200" y="30" width="90" height="34" rx="4" fill="none" stroke="#888" />
+  <text x="245" y="52" text-anchor="middle" fill="currentColor">x_fifo</text>
+  <rect x="350" y="30" width="110" height="34" rx="8" fill="none" stroke="#888" stroke-width="1.5" />
+  <text x="405" y="52" text-anchor="middle" fill="currentColor" font-weight="bold">SquareIt</text>
+  <rect x="510" y="93" width="90" height="34" rx="4" fill="none" stroke="#888" />
+  <text x="555" y="115" text-anchor="middle" fill="currentColor">sq_fifo</text>
+  <rect x="350" y="156" width="110" height="34" rx="8" fill="none" stroke="#888" stroke-width="1.5" />
+  <text x="405" y="178" text-anchor="middle" fill="currentColor" font-weight="bold">TimesTwo</text>
+  <rect x="200" y="156" width="90" height="34" rx="4" fill="none" stroke="#888" />
+  <text x="245" y="178" text-anchor="middle" fill="currentColor">y_fifo</text>
+  <line x1="150" y1="75" x2="197" y2="50" stroke="#888" stroke-width="1.5" marker-end="url(#arr)" />
+  <text x="163" y="52" fill="currentColor" font-size="11">put</text>
+  <line x1="290" y1="47" x2="347" y2="47" stroke="#888" stroke-width="1.5" marker-end="url(#arr)" />
+  <text x="308" y="40" fill="currentColor" font-size="11">get</text>
+  <line x1="460" y1="47" x2="540" y2="90" stroke="#888" stroke-width="1.5" marker-end="url(#arr)" />
+  <text x="503" y="58" fill="currentColor" font-size="11">put</text>
+  <line x1="540" y1="130" x2="460" y2="173" stroke="#888" stroke-width="1.5" marker-end="url(#arr)" />
+  <text x="503" y="166" fill="currentColor" font-size="11">get</text>
+  <line x1="347" y1="173" x2="293" y2="173" stroke="#888" stroke-width="1.5" marker-end="url(#arr)" />
+  <text x="308" y="166" fill="currentColor" font-size="11">put</text>
+  <line x1="197" y1="173" x2="150" y2="145" stroke="#888" stroke-width="1.5" marker-end="url(#arr)" />
+  <text x="158" y="170" fill="currentColor" font-size="11">get</text>
+</svg>
+<figcaption><em>Figure 9: A processing pipeline — y = 2x². The test is the first and last stage; the workers know only their FIFOs.</em></figcaption>
+</figure>
+<p>The test chooses x, sends it into the pipeline, and waits for y to come back around, comparing against 2x². Two worker components do the arithmetic, each connected only to FIFOs; neither knows the other exists — or that the thing feeding them is the test itself.</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 31, Figure 10: The first stage squares its input
+#[derive(Component, Default)]
+struct SquareIt {
+    #[port(get)]
+    input: GetPort&lt;u32&gt;,
+    #[port(put)]
+    output: PutPort&lt;u32&gt;,
+}
+
+impl Component for SquareIt {
+    async fn run(&amp;mut self, ctx: &amp;mut RustdvCtx) -&gt; Result&lt;(), TestError&gt; {
+        loop {
+            let x = self.input.get().await; // waits for the test to send x
+            ctx.info(&amp;format!("{x}² = {}", x * x));
+            self.output.put(x * x).await; // waits for TimesTwo to take it
+        }
+    }
+}
+<span class="boring">}</span></code></pre>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 31, Figure 11: The second stage doubles what the first produced
+#[derive(Component, Default)]
+struct TimesTwo {
+    #[port(get)]
+    input: GetPort&lt;u32&gt;,
+    #[port(put)]
+    output: PutPort&lt;u32&gt;,
+}
+
+impl Component for TimesTwo {
+    async fn run(&amp;mut self, ctx: &amp;mut RustdvCtx) -&gt; Result&lt;(), TestError&gt; {
+        loop {
+            let sq = self.input.get().await; // waits for SquareIt
+            ctx.info(&amp;format!("2 × {sq} = {}", 2 * sq));
+            self.output.put(2 * sq).await; // waits for the test to read it
+        }
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>Note the <code>loop</code> with no exit and no objection. The workers are <em>responders</em>: they serve forever, and they get to, because ending the run phase is not their job — it belongs to the component doing the work that matters. That is what makes the objection load-bearing rather than ceremonial: when the test’s guard drops, the phase ends, and the workers’ unfinished loops are dropped with it.</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 31, Figure 12: The test drives the pipeline and checks the answer
+#[rustdv::test]
+#[derive(Component, Default)]
+struct MathTest {
+    #[component]
+    square_it: RustdvComp,
+    #[component]
+    times_two: RustdvComp,
+    #[component]
+    x_fifo: TlmFifo&lt;u32&gt;,
+    #[component]
+    sq_fifo: TlmFifo&lt;u32&gt;,
+    #[component]
+    y_fifo: TlmFifo&lt;u32&gt;,
+    #[port(put)]
+    x_out: PutPort&lt;u32&gt;,
+    #[port(get)]
+    y_in: GetPort&lt;u32&gt;,
+}
+
+impl Component for MathTest {
+    fn build(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        self.square_it = SquareIt::new_comp();
+        self.times_two = TimesTwo::new_comp();
+        self.x_fifo = TlmFifo::new(1);
+        self.sq_fifo = TlmFifo::new(1);
+        self.y_fifo = TlmFifo::new(1);
+    }
+
+    fn connect(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        // test -&gt; square_it
+        self.x_fifo.put_export().connect(self, MathTest::X_OUT);
+        self.x_fifo.get_export().connect(&amp;self.square_it, SquareIt::INPUT);
+        // square_it -&gt; times_two
+        self.sq_fifo.put_export().connect(&amp;self.square_it, SquareIt::OUTPUT);
+        self.sq_fifo.get_export().connect(&amp;self.times_two, TimesTwo::INPUT);
+        // times_two -&gt; test
+        self.y_fifo.put_export().connect(&amp;self.times_two, TimesTwo::OUTPUT);
+        self.y_fifo.get_export().connect(self, MathTest::Y_IN);
+    }
+
+    async fn run(&amp;mut self, ctx: &amp;mut RustdvCtx) -&gt; Result&lt;(), TestError&gt; {
+        let _obj = ctx.raise_objection("driving the pipeline");
+        for x in 1..=4u32 {
+            self.x_out.put(x).await; // into the pipeline
+            let y = self.y_in.get().await; // ...and back out
+            let expected = 2 * x * x;
+            if y == expected {
+                ctx.info(&amp;format!("PASSED: x={x}, y={y}"));
+            } else {
+                return Err(TestError::from(format!(
+                    "FAILED: x={x}, y={y}, expected {expected}"
+                )));
+            }
+        }
+        Ok(())
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>Three things this one listing does that nothing before it could.</p>
+<p>First, <strong>the parent holds its own ports</strong> — <code>x_out</code> and <code>y_in</code> are fields of the test — and connects them with <code>connect(self, MathTest::X_OUT)</code>: the same call shape that wires a child, wiring the caller. The uniformity rule, made visible.</p>
+<p>Second, <strong>the round trip is closed</strong>: put x, await y. Every prior example streamed data one way; this is the first request/response loop through the component tree, and it is the DUT-free rehearsal for testbench 7.0, where a test’s <code>run</code> starts a sequence while a driver waits for items.</p>
+<p>Third, <strong>every run phase must make progress together</strong>. The test blocks waiting for its answer; <code>SquareIt</code> blocks waiting for x; <code>TimesTwo</code> blocks waiting for x². Nothing completes unless everything runs at once — and the parent is one of the things that must run. A phaser that finished the children before starting the parent could not execute this test at all: the children would wait forever for an x the parent never got to send. This test is <em>why</em> rustdv’s run phases are concurrent; the shape drove the design.</p>
+<pre><code class="language-text"># Figure 13: The pipeline checks itself
+
+      2.00ns INFO     running MathTest (3/4)  [ch31-component-communications/src/ch31_component_communications.rs:345]
+      2.00ns INFO     [MathTest.square_it]: 1² = 1
+      2.00ns INFO     [MathTest.times_two]: 2 × 1 = 2
+      2.00ns INFO     [MathTest]: PASSED: x=1, y=2
+      2.00ns INFO     [MathTest.square_it]: 2² = 4
+      2.00ns INFO     [MathTest.times_two]: 2 × 4 = 8
+      2.00ns INFO     [MathTest]: PASSED: x=2, y=8
+      2.00ns INFO     [MathTest.square_it]: 3² = 9
+      2.00ns INFO     [MathTest.times_two]: 2 × 9 = 18
+      2.00ns INFO     [MathTest]: PASSED: x=3, y=18
+      2.00ns INFO     [MathTest.square_it]: 4² = 16
+      2.00ns INFO     [MathTest.times_two]: 2 × 16 = 32
+      2.00ns INFO     [MathTest]: PASSED: x=4, y=32
+      2.00ns INFO     MathTest PASSED
+</code></pre>
+<p>A broken pipeline fails loudly rather than passing quietly — the comparison is in the test’s own <code>run</code>, which is what “the parent is a stage” buys.</p>
+<h2 id="what-declared-ports-make-checkable"><a class="header" href="#what-declared-ports-make-checkable">What declared ports make checkable</a></h2>
+<p>Declaring ports with <code>#[port(...)]</code> gave the framework a complete inventory of what must be wired. Here is what it does with it.</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 31, Figure 14: A port left unconnected is an elaboration error
+#[rustdv::test(expect_error = "tlm_unconnected_port")]
+#[derive(Component, Default)]
+struct UnconnectedTest {
+    #[component]
+    producer: RustdvComp,
+    #[component]
+    fifo: TlmFifo&lt;u32&gt;,
+}
+
+impl Component for UnconnectedTest {
+    fn build(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        self.producer = Producer::new_comp();
+        self.fifo = TlmFifo::new(1);
+    }
+    // No `connect` — Producer::put_port is declared but never wired.
+}
+<span class="boring">}</span></code></pre>
+<pre><code class="language-text"># Figure 15: Every missing connection, named, before anything runs
+
+these TLM ports were declared but never connected:
+  UnconnectedTest.producer.put_port (put)
+</code></pre>
+<p>At the end of elaboration, rustdv walks the tree and reports <strong>every</strong> declared-but-unconnected port at once, by path, before any run phase starts. This is a timing difference worth being precise about. It is not a compile error — the wiring is decided by <code>connect</code> code, so elaboration is exactly as early as the check can run. But it is earlier than pyuvm, which discovers a missing connection lazily, at the first <code>put</code> that has nowhere to go — one at a time, mid-simulation. An elaboration sweep that names all of them before the DUT ticks is one of the places rustdv hands you something real, and it costs nothing at the call site. (The <code>expect_error</code> in the test’s attribute is there only because this listing <em>wants</em> the failure, to prove it happens.)</p>
+<p>One last thing to know about <code>TlmFifo</code>, held for later: like <code>uvm_tlm_fifo</code>, it also carries a pair of publisher ports, reached with <code>TlmFifo::put_ap()</code> and <code>TlmFifo::get_ap()</code>, which announce each item the FIFO accepts and releases. They belong to the analysis machinery, and Chapter 32 explains them.</p>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>TLM-1 point-to-point, ported whole: a port is what a component calls, an export is what serves it, and the FIFO between them owns the queue and the decoupling — two components share a FIFO and never learn each other’s names. Blocking <code>put</code>/<code>get</code>/<code>peek</code> suspend in simulated time; <code>try_put</code> gives a refused transaction <em>back</em> (<code>Result&lt;(), T&gt;</code>, because taking by value means a bare “no” would lose the packet) and <code>try_get</code> answers <code>Option&lt;T&gt;</code> for the mirror-image reason. Connection goes through typed port names generated by <code>#[port(...)]</code> — reachable through factory-erased children and through <code>self</code> alike — and the declared-port inventory buys an elaboration sweep that names every unwired port before anything runs. The pipeline stands as the chapter’s thesis in working form: parents run concurrently with their children, responders serve forever, and the objection decides when everyone is done.</p>
+<p>Ports, exports, and FIFOs move data from one component to <em>one</em> other component. A monitor has the opposite problem — one observation, delivered to a scoreboard, a coverage collector, and anyone else who cares, none of whom may slow it down. That is broadcasting, and it is Chapter 32.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="chapter-30-variation-point-testbench-5.0.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="chapter-32-analysis-ports.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="chapter-30-variation-point-testbench-5.0.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="chapter-32-analysis-ports.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-09f2665d.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

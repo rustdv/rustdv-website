@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Introduction to rustdv</title>
+<meta name="description" content="What rustdv is, how it relates to the UVM, cocotb, and pyuvm, and a complete reference for what the rustdv prelude provides.">
+<link rel="icon" type="image/png" href="assets/rustdv-logo.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img src="assets/rustdv-logo.png" alt="rustdv logo">
+      rustdv
+    </a>
+    <nav class="site-nav">
+      <a href="getting-started.html">Getting Started</a>
+      <a href="introduction.html">Introduction</a>
+      <a href="translations.html">UVM Translations</a>
+      <a href="https://github.com/rustdv/rustdv">GitHub</a>
+      <a class="nav-cta" href="book/index.html">Read the Book</a>
+      <a class="nav-coffee" href="https://buymeacoffee.com/raysalemi" title="Buy Me a Coffee">&#9749;</a>
+    </nav>
+  </div>
+</header>
+
+<main class="article">
+
+<h1>Introduction to rustdv</h1>
+<p class="subtitle">What rustdv is, and a complete reference for what it provides.</p>
+
+<h2>The UVM</h2>
+
+<p>The Universal Verification Methodology (UVM) is the dominant RTL verification
+methodology across the IC industry. The UVM is popular because it allows engineers to
+reuse testbench components across testbenches, and because it provides a standardized
+testbench structure that engineers recognize as they move across projects, companies,
+and industries. If you apply for a job as a verification engineer, it is likely that
+the hiring team uses the UVM and will test your UVM knowledge.</p>
+
+<p>IEEE defined the UVM in the
+<a href="https://ieeexplore.ieee.org/document/9195920"><em>IEEE Standard for Universal
+Verification Methodology Language Reference Manual</em></a>, also known as the IEEE
+1800.2 standard. While the industry defined the standard in terms of SystemVerilog,
+the methodology's ideas travel: <a href="https://github.com/pyuvm/pyuvm">pyuvm</a>
+implements it in Python (on top of <a href="https://www.cocotb.org">cocotb</a>), and
+rustdv brings those same ideas to Rust.</p>
+
+<h2>What rustdv is</h2>
+
+<p>rustdv is a hardware verification framework inspired by the UVM. It is not an
+implementation of IEEE 1800.2 — the standard is written in terms of object-oriented
+class hierarchies, and Rust is not an object-oriented language — and some layers,
+notably TLM and the analysis layer, are deliberately done differently. What rustdv
+takes from the UVM is what makes the UVM valuable: the testbench structure, the
+phased component tree, late binding through configuration and a factory, and the
+sequence machinery, re-created with Rust's own tools — structs, traits, and
+ownership.</p>
+
+<p>Where the Python story needs two projects — cocotb to talk to the simulator and
+pyuvm to provide the methodology — rustdv contains both layers: a simulator-driven
+async executor with triggers and signal handles underneath, and the component
+methodology on top. Testbenches compile to native shared libraries that the simulator
+loads over VPI, with zero external dependencies. The examples and the regression
+suite run on Icarus Verilog, which is free and open source.</p>
+
+<p>The methodology layer provides the UVM structure a verification engineer expects:</p>
+
+<ul>
+  <li>A component tree with the nine UVM phases, in the UVM's traversal order —
+      top-down <code>build</code>, bottom-up <code>connect</code>, a concurrent,
+      objection-gated <code>run</code>, and the closing phases.</li>
+  <li>Path-addressed runtime configuration (<code>ConfigDb</code>) with the UVM's
+      wildcard paths — and a <code>Result</code> answer that names the cause when a
+      lookup fails.</li>
+  <li>A factory with overrides by type, by name, and by instance, for both components
+      and sequences.</li>
+  <li>TLM ports, exports, and FIFOs — two components connect to the same FIFO and
+      neither learns the other exists.</li>
+  <li>Analysis ports and subscribers for monitors, scoreboards, and coverage.</li>
+  <li>The full sequencer handshake — <code>start_item</code>/<code>finish_item</code>,
+      <code>get_next_item</code>/<code>item_done</code>, responses in order or by
+      ticket, and virtual sequences.</li>
+  <li>UVM-style logging with per-hierarchy verbosity control and the familiar
+      time/level/path line format.</li>
+</ul>
+
+<p>Because rustdv components are ordinary Rust structs, the pure-software parts of a
+testbench — predictors, transaction operations, coverage logic — also run under
+<code>cargo test</code> with no simulator at all.</p>
+
+<h2>Getting started</h2>
+
+<p>The <a href="getting-started.html">Getting Started page</a> takes you from an empty
+directory to a running testbench in three small files, then to the complete TinyALU
+testbench the repository ships.</p>
+
+<p>The companion book, <a href="book/index.html"><em>Rust for RTL Verification</em></a>,
+is the front door to the methodology. It assumes no prior Rust — the first fourteen
+chapters teach the language from zero — and then builds a complete TinyALU testbench
+version by version, adding one UVM capability at a time. The
+<a href="book/interlude-tinyalu-testbench.html">Interlude</a> shows the complete
+testbench in one place and is the best single answer to &ldquo;what does rustdv code
+look like?&rdquo;</p>
+
+<p>The framework lives at
+<a href="https://github.com/rustdv/rustdv">github.com/rustdv/rustdv</a> and is
+published as <a href="https://crates.io/crates/rustdv">rustdv on crates.io</a>.
+Questions and discussion belong in
+<a href="https://github.com/rustdv/rustdv/discussions">GitHub Discussions</a>.</p>
+
+<h2>What rustdv provides</h2>
+
+<p>Every rustdv listing in the book opens with <code>use rustdv::prelude::*</code> —
+the analog of <code>import uvm_pkg::*</code> and <code>from pyuvm import *</code>.
+The tables below are the complete reference for what that line brings into scope,
+plus the macros. The Chapter column points to where the book teaches each name; a
+dash means the name is provided for completeness but the book's examples never need
+it.</p>
+
+<h3>The prelude, alphabetically</h3>
+
+<div class="table-scroll">
+<table>
+<thead><tr><th>Name</th><th>What it is</th><th>Chapter</th></tr></thead>
+<tbody>
+<tr><td><code>Active</code></td><td>the active/passive agent knob, read from the ConfigDb (pyuvm's <code>is_active</code> int, as an enum)</td><td>40</td></tr>
+<tr><td><code>AnalysisBus</code></td><td>the broadcast hub; it stores nothing</td><td>32</td></tr>
+<tr><td><code>build_all</code></td><td>drive <code>build</code> across a component tree (the runner's job)</td><td>24</td></tr>
+<tr><td><code>channel</code></td><td>make a <code>(Sender, Receiver)</code> queue pair with a capacity</td><td>—</td></tr>
+<tr><td><code>check_all</code></td><td>drive <code>check</code> across a tree</td><td>24</td></tr>
+<tr><td><code>CheckSink</code></td><td>the collector <code>check</code> phases write failures into</td><td>24</td></tr>
+<tr><td><code>Clock</code></td><td>a software clock driver — taught once, then retired in favor of BFMs that wait on edges</td><td>17</td></tr>
+<tr><td><code>Component</code></td><td>the lifecycle trait: <code>build</code>, <code>connect</code>, <code>run</code>, and the other phase methods</td><td>24</td></tr>
+<tr><td><code>ComponentNode</code></td><td>the tree-traversal trait <code>#[derive(Component)]</code> implements</td><td>21, 24</td></tr>
+<tr><td><code>ConfigDb</code></td><td>path-addressed runtime configuration; <code>get</code> returns a <code>Result</code> naming the cause</td><td>25, 27</td></tr>
+<tr><td><code>connect_all</code></td><td>drive <code>connect</code> across a tree</td><td>24</td></tr>
+<tr><td><code>create_seq</code></td><td>build a sequence through the sequence factory</td><td>36</td></tr>
+<tr><td><code>Either</code></td><td>the answer from racing two differently-typed futures</td><td>—</td></tr>
+<tr><td><code>end_of_elaboration_all</code></td><td>phase driver</td><td>24</td></tr>
+<tr><td><code>Event</code></td><td>set once; everyone waiting wakes (SV: named <code>event</code>)</td><td>16</td></tr>
+<tr><td><code>extract_all</code></td><td>phase driver</td><td>24</td></tr>
+<tr><td><code>Factory</code></td><td>the component registry: build by type or name, override by type, name, or instance</td><td>29</td></tr>
+<tr><td><code>final_all</code></td><td>phase driver</td><td>24</td></tr>
+<tr><td><code>first2</code>, <code>first!</code></td><td>race futures; the first to finish wins (SV: <code>fork...join_any</code>)</td><td>16</td></tr>
+<tr><td><code>GetPort</code></td><td>the consuming end of a TLM connection</td><td>31</td></tr>
+<tr><td><code>HandleError</code></td><td>what signal access returns instead of a crash</td><td>17, 19</td></tr>
+<tr><td><code>HierarchyHandle</code></td><td>a handle to a scope in the design hierarchy</td><td>—</td></tr>
+<tr><td><code>join2</code>, <code>join!</code></td><td>run futures together; wait for all (SV: <code>fork...join</code>)</td><td>16</td></tr>
+<tr><td><code>Lock</code></td><td>mutual exclusion with an RAII guard (SV: a one-key <code>semaphore</code>)</td><td>16</td></tr>
+<tr><td><code>log</code></td><td>the logging facade; policy is per hierarchy</td><td>15, 26</td></tr>
+<tr><td><code>Logic</code>, <code>LogicArray</code></td><td>four-state values, scalar and vector</td><td>17</td></tr>
+<tr><td><code>LogicHandle</code></td><td>a named DUT signal: read it, drive it; a typo'd name is an <code>Err</code></td><td>17</td></tr>
+<tr><td><code>next_time_step</code></td><td>trigger for the simulator's next time step</td><td>—</td></tr>
+<tr><td><code>NullTrigger</code></td><td>the trigger that is ready the next time it is polled</td><td>15</td></tr>
+<tr><td><code>ObjectionGuard</code></td><td>returned by <code>ctx.raise_objection</code>; the run phase ends when the last guard drops</td><td>23</td></tr>
+<tr><td><code>PeekPort</code></td><td>the look-without-taking end of a TLM connection</td><td>31</td></tr>
+<tr><td><code>PortName</code>, <code>PortOwner</code></td><td>how the elaboration check names an unconnected port</td><td>31</td></tr>
+<tr><td><code>print_hierarchy</code></td><td>dump a component tree</td><td>—</td></tr>
+<tr><td><code>PublishPort</code></td><td>the publishing end a component declares</td><td>32</td></tr>
+<tr><td><code>PutPort</code></td><td>the producing end of a TLM connection</td><td>31</td></tr>
+<tr><td><code>Queue</code></td><td>the sim-aware mailbox: bounded puts and empty gets block in simulated time (SV: <code>mailbox#(T)</code>)</td><td>16</td></tr>
+<tr><td><code>read_only</code>, <code>read_write</code></td><td>scheduler-region triggers (cocotb's <code>ReadOnly</code>/<code>ReadWrite</code>)</td><td>—</td></tr>
+<tr><td><code>Receiver</code></td><td>the getting end <code>channel</code> returns</td><td>—</td></tr>
+<tr><td><code>report_all</code></td><td>phase driver</td><td>24</td></tr>
+<tr><td><code>Rng</code></td><td>the deterministic per-test random source behind <code>ctx.rng()</code></td><td>20</td></tr>
+<tr><td><code>run_component_test</code></td><td>run a component tree as a self-contained test</td><td>—</td></tr>
+<tr><td><code>run_extract_check_report</code></td><td>drive the closing phases together</td><td>—</td></tr>
+<tr><td><code>RustdvComp</code></td><td>a slot holding any factory-built component</td><td>29</td></tr>
+<tr><td><code>RustdvCtx</code></td><td>the context: path, logging, rng, DUT handle, objection — the framework, handed as an argument</td><td>15</td></tr>
+<tr><td><code>RustdvSeq</code></td><td>a slot holding any factory-built sequence — <code>RustdvComp</code>'s parallel</td><td>36</td></tr>
+<tr><td><code>RustdvShared</code></td><td>a cloneable handle to one shared object — <code>Rc&lt;RefCell&gt;</code> wearing the framework's name</td><td>32</td></tr>
+<tr><td><code>Sender</code></td><td>the putting end <code>channel</code> returns</td><td>—</td></tr>
+<tr><td><code>SeqCtx</code></td><td>the context a sequence <code>body</code> receives</td><td>36</td></tr>
+<tr><td><code>SeqError</code></td><td>what a sequence can fail with</td><td>36</td></tr>
+<tr><td><code>SeqItem</code></td><td>the bounds a sequence-item type must meet</td><td>36</td></tr>
+<tr><td><code>SeqItemExport</code>, <code>SeqItemPort</code></td><td>the driver's side of the sequencer handshake</td><td>36</td></tr>
+<tr><td><code>Sequence</code></td><td>the trait with one method, <code>body</code> — a test program, not a component</td><td>36</td></tr>
+<tr><td><code>Sequencer</code></td><td>grants sequences their turns; feeds the driver</td><td>36</td></tr>
+<tr><td><code>set_seq_override</code></td><td>change which sequence <code>create_seq</code> builds</td><td>36</td></tr>
+<tr><td><code>sim_time_ns</code></td><td>the current simulated time</td><td>—</td></tr>
+<tr><td><code>SimDuration</code></td><td>an amount of simulated time</td><td>17</td></tr>
+<tr><td><code>spawn</code>, <code>spawn_named</code></td><td>launch a concurrent task; the named form stamps its log lines</td><td>16</td></tr>
+<tr><td><code>start_all</code></td><td>drive the run phase across a tree</td><td>24</td></tr>
+<tr><td><code>start_of_simulation_all</code></td><td>phase driver</td><td>24</td></tr>
+<tr><td><code>SubscribePort</code></td><td>the subscribing end a component declares</td><td>32</td></tr>
+<tr><td><code>Subscriber</code></td><td>the trait a subscriber implements once per stream</td><td>32</td></tr>
+<tr><td><code>TaskHandle</code></td><td>what <code>spawn</code> returns: await it for the result, or <code>cancel()</code> it</td><td>16</td></tr>
+<tr><td><code>TestError</code></td><td>the error a failing test returns; <code>Ok(())</code> is a pass</td><td>15</td></tr>
+<tr><td><code>Timer</code></td><td>the simulated-time trigger: <code>Timer::ns(2).await</code></td><td>15</td></tr>
+<tr><td><code>TlmFifo</code></td><td>the FIFO two components share without learning each other's names</td><td>31</td></tr>
+<tr><td><code>TxnId</code></td><td>the ticket <code>finish_item</code> returns; claims a response</td><td>37, 38</td></tr>
+<tr><td><code>with_timeout</code></td><td>wrap an await with a deadline</td><td>—</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>The macros</h3>
+
+<div class="table-scroll">
+<table>
+<thead><tr><th>Name</th><th>What it does</th><th>Chapter</th></tr></thead>
+<tbody>
+<tr><td><code>#[rustdv::test]</code></td><td>registers a test with the runner (cocotb: <code>@cocotb.test()</code>)</td><td>15, 21</td></tr>
+<tr><td><code>#[derive(Component)]</code></td><td>writes the component-tree plumbing (SV: the <code>uvm_component_utils</code> family)</td><td>21, 24</td></tr>
+<tr><td><code>vpi_bootstrap!()</code></td><td>one line per testbench crate: exports the entry points the simulator loads</td><td>17</td></tr>
+<tr><td><code>first!</code>, <code>join!</code></td><td>variadic race and join</td><td>16</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>On the surface, outside the prelude</h3>
+
+<p>A few names live on the crate but not in the prelude; reach them as
+<code>rustdv::Name</code>.</p>
+
+<div class="table-scroll">
+<table>
+<thead><tr><th>Name</th><th>What it is</th><th>Chapter</th></tr></thead>
+<tbody>
+<tr><td><code>ConfigError</code></td><td>why a ConfigDb <code>get</code> failed, as a value</td><td>28</td></tr>
+<tr><td><code>ConnectError</code></td><td>why a connection could not be made</td><td>31</td></tr>
+<tr><td><code>TlmFull</code>, <code>TlmEmpty</code>, <code>TlmError</code></td><td>the channel layer's refusals: what <code>Sender::try_send</code> and <code>Receiver::try_recv</code> answer</td><td>—</td></tr>
+<tr><td><code>Maker</code></td><td>the closure type the factory stores per registration</td><td>29</td></tr>
+<tr><td><code>ResponseQueue</code></td><td>the store behind <code>get_response</code> — responses held for claiming, in order or by ticket (pyuvm's <code>ResponseQueue</code>)</td><td>—</td></tr>
+<tr><td><code>TimeoutError</code>, <code>TaskError</code>, <code>ValueError</code>, <code>AnyHandle</code>, <code>Executor</code>, <code>TestRegistration</code>, <code>top_module</code></td><td>infrastructure corners a testbench rarely touches</td><td>—</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>The whole of each layer is also re-exported for power users:
+<code>rustdv::sim</code>, <code>rustdv::runner</code>, <code>rustdv::gpi</code>.</p>
+
+<div class="note">
+Coming from pyuvm or SystemVerilog UVM? The
+<a href="translations.html">UVM translation tables</a> map your working vocabulary —
+Python idioms, cocotb calls, and SystemVerilog UVM classes — onto their rustdv
+equivalents, name by name.
+</div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-cols">
+      <div>
+        <h4>Learn</h4>
+        <ul>
+          <li><a href="getting-started.html">Getting Started</a></li>
+          <li><a href="book/index.html">The Book</a></li>
+          <li><a href="introduction.html">Introduction to rustdv</a></li>
+          <li><a href="translations.html">UVM Translation Tables</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Project</h4>
+        <ul>
+          <li><a href="https://github.com/rustdv/rustdv">GitHub Repository</a></li>
+          <li><a href="https://github.com/rustdv/rustdv/discussions">GitHub Discussions</a></li>
+          <li><a href="https://crates.io/crates/rustdv">rustdv on crates.io</a></li>
+          <li><a href="https://docs.rs/rustdv">API Documentation (docs.rs)</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>About</h4>
+        <ul>
+          <li><a href="journey.html">Built with Claude</a></li>
+          <li><a href="https://www.uvmprimer.com">The UVM Primer</a></li>
+          <li><a href="https://a.co/d/0hTKAJvh">Python for RTL Verification</a></li>
+          <li><a href="https://buymeacoffee.com/raysalemi">Buy Me a Coffee</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Ray Salemi. rustdv is free and open source.</span>
+      <span>rustdv.org</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,415 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Components - Rust for RTL Verification</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A complete course in Rust and rustdv">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-e96d0476.css">
+        <link rel="stylesheet" href="css/chrome-be44eb3b.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="github-markdown-482a44a1.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-d33968a7.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-113777c1.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Rust for RTL Verification</h1>
+
+                    <div class="right-buttons">
+                        <a href="https://buymeacoffee.com/raysalemi" class="coffee-button" title="Buy me a coffee" aria-label="Buy me a coffee" target="_blank" rel="noopener noreferrer">
+                            <span class="coffee-emoji" aria-hidden="true">&#9749;</span><span class="coffee-label">&nbsp;Buy me a coffee</span>
+                        </a>
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main class="markdown-body">
+                        <h1 id="chapter-24-components"><a class="header" href="#chapter-24-components">Chapter 24: Components</a></h1>
+<p>Testbench 3.0 gave us a UVM test, and the test was the only component in it: the BFM and the scoreboard were ordinary local values inside its <code>run</code>. That works at TinyALU scale and stops working shortly after — a real testbench is a <em>tree</em> of single-purpose components, each with its own job, sharing one lifecycle so that everything gets built, wired, run, and checked in a dependable order. The class that provides all of that in the UVM is <code>uvm_component</code>. This chapter ports it.</p>
+<blockquote>
+<p><strong>In the UVM…</strong> every testbench class extends <code>uvm_component</code>, whose phase methods the framework calls in a fixed order — <code>build</code>, <code>connect</code>, <code>end_of_elaboration</code>, <code>start_of_simulation</code>, <code>run</code> (the only task, objection-gated), <code>extract</code>, <code>check</code>, <code>report</code>, <code>final</code>. We built the hierarchy in <code>build_phase()</code> by instantiating children with a <em>name</em> and a <em>parent</em> — <code>mc = middle_comp::type_id::create("mc", this)</code> in SystemVerilog, <code>self.mc = MiddleComp("mc", self)</code> in pyuvm — and the framework wove the references into a tree with paths like <code>uvm_test_top.mc.bc</code>.</p>
+</blockquote>
+<h2 id="the-nine-phases"><a class="header" href="#the-nine-phases">The nine phases</a></h2>
+<p>Figure 1 is a test that overrides every phase method just to prove the order. It is a struct test, as in Chapter 23 — and that choice now pays off, because a struct test <em>is a component</em>: <code>#[rustdv::test]</code> registers it, and the runner drives its phases exactly the way <code>@pyuvm.test()</code> hands a class to pyuvm’s phaser.</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 24, Figure 1: A uvm_test demonstrating the phase methods
+
+#[rustdv::test]
+#[derive(Component, Default)]
+struct PhaseTest;
+
+impl Component for PhaseTest {
+    fn build(&amp;mut self, ctx: &amp;mut RustdvCtx) {
+        ctx.info("1 build");
+    }
+    fn connect(&amp;mut self, ctx: &amp;mut RustdvCtx) {
+        ctx.info("2 connect");
+    }
+    fn end_of_elaboration(&amp;mut self, ctx: &amp;mut RustdvCtx) {
+        ctx.info("3 end_of_elaboration");
+    }
+    fn start_of_simulation(&amp;mut self, ctx: &amp;mut RustdvCtx) {
+        ctx.info("4 start_of_simulation");
+    }
+    async fn run(&amp;mut self, ctx: &amp;mut RustdvCtx) -&gt; Result&lt;(), TestError&gt; {
+        let _obj = ctx.raise_objection("run");
+        ctx.info("5 run");
+        Ok(())
+    }
+    fn extract(&amp;mut self, ctx: &amp;mut RustdvCtx) {
+        ctx.info("6 extract");
+    }
+    fn check(&amp;mut self, ctx: &amp;mut RustdvCtx, errors: &amp;mut CheckSink) {
+        let _ = errors;
+        ctx.info("7 check");
+    }
+    fn report(&amp;mut self, ctx: &amp;mut RustdvCtx) {
+        ctx.info("8 report");
+    }
+    fn final_phase(&amp;mut self, ctx: &amp;mut RustdvCtx) {
+        ctx.info("9 final");
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>The pieces, in source order:</p>
+<ul>
+<li><code>#[derive(Component)]</code> — the derive from Chapter 21. It writes the tree-traversal plumbing so the phaser can walk this component’s children. <code>PhaseTest</code> has none, so the derive’s work here is small; it earns its keep in figure 4.</li>
+<li><code>impl Component for PhaseTest</code> — the <code>Component</code> trait carries all nine phase methods, every one with a default no-op body. A component overrides only the phases it uses; this one overrides all nine only because the order is the demonstration.</li>
+<li><code>ctx: &amp;mut RustdvCtx</code> — every phase receives the context, and its log lines are stamped with the path the phase walk derived. No phase method takes a name; no component stores one.</li>
+<li><code>async fn run</code> — the one phase that takes simulated time, so the one that is <code>async</code>. It raises an objection the moment it starts and holds it as a guard: the run phase ends when every guard in the testbench has dropped. Dropping happens here at the end of the function, the way any Rust value drops.</li>
+<li><code>fn final_phase</code>, not <code>fn final</code> — <code>final</code> is a Rust keyword, so this is the one phase whose rustdv name differs by necessity.</li>
+</ul>
+<p>Figure 2 is the run.</p>
+<pre><code class="language-text"># Figure 2: The lifecycle runs in order
+
+      0.00ns INFO     rustdv: found 2 test(s), RUSTDV_RANDOM_SEED=1
+      0.00ns INFO     running PhaseTest (1/2)  [ch24-components/src/ch24_components.rs:38]
+      0.00ns INFO     [PhaseTest]: 1 build
+      0.00ns INFO     [PhaseTest]: 2 connect
+      0.00ns INFO     [PhaseTest]: 3 end_of_elaboration
+      0.00ns INFO     [PhaseTest]: 4 start_of_simulation
+      0.00ns INFO     [PhaseTest]: 5 run
+      0.00ns INFO     [PhaseTest]: 6 extract
+      0.00ns INFO     [PhaseTest]: 7 check
+      0.00ns INFO     [PhaseTest]: 8 report
+      0.00ns INFO     [PhaseTest]: 9 final
+      0.00ns INFO     PhaseTest PASSED
+      ... (TestTop, the second test in this crate, follows)
+******************************************************************************
+** TEST                                       STATUS  SIM TIME (ns)      **
+******************************************************************************
+** PhaseTest                                    PASS           0.00      **
+** TestTop                                      PASS           0.00      **
+******************************************************************************
+REGRESSION: PASS
+</code></pre>
+<p>Nine phases, in the UVM’s order, driven by the framework — nobody in the listing called any of them. The <code>[PhaseTest]</code> between the brackets is the component’s path, derived by the walk rather than stored anywhere.</p>
+<p>One divergence to note now, because it matters to SystemVerilog readers checking this against muscle memory: rustdv follows <em>pyuvm’s</em> traversal directions, not the SystemVerilog UVM’s. <code>build</code> runs top-down and <code>connect</code> bottom-up in all three frameworks, but <code>end_of_elaboration</code>, <code>start_of_simulation</code>, <code>extract</code>, <code>check</code>, and <code>report</code> run top-down here, where the SystemVerilog UVM runs them bottom-up. If your testbench depends on a child’s <code>report</code> running before its parent’s, that assumption does not carry over.</p>
+<h2 id="why-build-and-connect-exist"><a class="header" href="#why-build-and-connect-exist">Why build and connect exist</a></h2>
+<p>A fair question from a Rust point of view: a struct’s constructor can build its children, so why have a <code>build</code> phase at all? Build the children in <code>new()</code>, take the connections as constructor arguments, and the framework gets simpler — the design almost writes itself.</p>
+<p>It is also wrong, and the reason it is wrong is the most important paragraph in this chapter. The gap between <em>a component existing</em> and <em>its children existing</em> is not dead time to be optimized away — it is where every late-binding mechanism in the UVM lives. Configuration must be able to reach a component <em>before</em> it decides what children to make: that is how one environment builds an active agent in one test and a passive one in another (Chapter 25). The factory must be able to substitute a child’s type <em>before</em> the child is constructed: that is what a factory override is (Chapter 29). And connection must happen <em>after</em> everything below exists: that is why <code>connect</code> runs bottom-up (Chapter 31). Fold building into constructors and all three mechanisms lose the moment they operate in. The UVM’s designers had typed classes, parameters, and constructors in hand and still built a two-stage lifecycle — three frameworks in three languages kept it — because deferring those decisions is the point, not an accident of class-based construction.</p>
+<p>So in rustdv, <code>build</code> and <code>connect</code> are real phase methods, and the directions are load-bearing: <code>build</code> runs top-down so a parent decides what to create before its children exist, and <code>connect</code> runs bottom-up so wiring happens over a finished subtree.</p>
+<h2 id="growing-the-tree"><a class="header" href="#growing-the-tree">Growing the tree</a></h2>
+<p>Figure 3 is the hierarchy this section builds — the same three-level tower the earlier books used.</p>
+<pre><code class="language-text"># Figure 3: The three-level hierarchy
+
+    TestTop                (a test — the root)
+       └── mc: MiddleComp
+              └── bc: BottomComp
+</code></pre>
+<p>Each parent creates its child <em>in its own build phase</em>, and the phaser descends into whatever <code>build</code> created, so the tree grows top-down as it is walked. Figures 4 through 6 are the three components, from the top down.</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 24, Figure 4: the test at the top. Its build phase constructs the
+// middle component; the phaser descends into the tree that build creates.
+#[rustdv::test]
+#[derive(Component, Default)]
+struct TestTop {
+    #[component]
+    mc: Option&lt;MiddleComp&gt;,
+}
+
+impl Component for TestTop {
+    fn build(&amp;mut self, ctx: &amp;mut RustdvCtx) {
+        ctx.info("build phase");
+        self.mc = Some(MiddleComp::default());
+    }
+    fn final_phase(&amp;mut self, ctx: &amp;mut RustdvCtx) {
+        ctx.info("final phase");
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>Three lines carry the design:</p>
+<ul>
+<li><code>#[component]</code> — this attribute tells the derive which fields are children. The phase walk visits exactly the marked fields, in declaration order.</li>
+<li><code>mc: Option&lt;MiddleComp&gt;</code> — the child is declared as an <code>Option</code> because before <code>build</code> runs there <em>is no child</em>. <code>None</code> is the type-level spelling of “declared but not yet built” — the state every UVM component is in between its own construction and its <code>build_phase</code>. The struct definition names what the tree can hold; <code>build</code> decides what it does hold.</li>
+<li><code>self.mc = Some(MiddleComp::default())</code> — building the child is an assignment. Compare <code>self.mc = MiddleComp("mc", self)</code>: no name string, because the field is named <code>mc</code> and the walk derives the path; no parent handle, because ownership already says whose field this is.</li>
+</ul>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 24, Figure 5: the middle component builds the bottom component in
+// its own build phase, and announces itself at end of elaboration.
+#[derive(Component, Default)]
+struct MiddleComp {
+    #[component]
+    bc: Option&lt;BottomComp&gt;,
+}
+
+impl Component for MiddleComp {
+    fn build(&amp;mut self, _ctx: &amp;mut RustdvCtx) {
+        self.bc = Some(BottomComp::default());
+    }
+    fn end_of_elaboration(&amp;mut self, ctx: &amp;mut RustdvCtx) {
+        ctx.info("end of elaboration phase");
+    }
+}
+<span class="boring">}</span></code></pre>
+<p><code>MiddleComp</code> is not a test — no <code>#[rustdv::test]</code> — just a component that both is built and builds. When the top-down walk reaches it, its <code>build</code> runs and <code>bc</code> comes into existence; the walk then descends into <code>bc</code>. Top-down construction, exactly as <code>build_phase</code> has always worked.</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Chapter 24, Figure 6: the bottom component. Only a run phase, which
+// objects, logs under its path (uvm_test_top.mc.bc in UVM; TestTop.mc.bc
+// here), and drops.
+#[derive(Component, Default)]
+struct BottomComp;
+
+impl Component for BottomComp {
+    async fn run(&amp;mut self, ctx: &amp;mut RustdvCtx) -&gt; Result&lt;(), TestError&gt; {
+        let _obj = ctx.raise_objection("bc run");
+        ctx.info("run phase");
+        Ok(())
+    }
+}
+<span class="boring">}</span></code></pre>
+<p><code>BottomComp</code> overrides one phase and is the pattern for every leaf that does work: raise the objection, do the job, and let the guard drop when the function ends. Every component’s <code>run</code> gets this same deal — each raises its own objection for its own work, and the run phase of the whole testbench ends when the last guard anywhere has dropped. What the objection buys becomes vivid in Chapter 31, where a parent and its children run <em>at the same time</em> and components that never finish on their own — monitors, responders — stop exactly when the objecting components are done.</p>
+<p>Figure 7 is the run.</p>
+<pre><code class="language-text"># Figure 7: The walk derives every path
+
+      0.00ns INFO     running TestTop (2/2)  [ch24-components/src/ch24_components.rs:118]
+      0.00ns INFO     [TestTop]: build phase
+      0.00ns INFO     [TestTop.mc]: end of elaboration phase
+      0.00ns INFO     [TestTop.mc.bc]: run phase
+      0.00ns INFO     [TestTop]: final phase
+      0.00ns INFO     TestTop PASSED
+</code></pre>
+<p>Four log lines, four different phase methods, three different components — and each line carries the right path. <code>[TestTop.mc.bc]</code> is the path the UVM would spell <code>uvm_test_top.mc.bc</code>, synthesized from field names by the walk as it descends: <code>TestTop.build</code> created <code>mc</code>, the phaser recursed, <code>mc.build</code> created <code>bc</code>, and each component logged under the path the traversal accumulated. Nothing stored a path and nobody typed one. Move a component to a different place in the tree and its path follows, because there is no string anywhere that could go stale.</p>
+<h2 id="what-this-costs"><a class="header" href="#what-this-costs">What this costs</a></h2>
+<p>Two prices, stated plainly.</p>
+<p><strong>Phase discipline is not checked at compile time.</strong> There is one context type, <code>RustdvCtx</code>, and every phase receives it whole — the compiler does not know that raising an objection makes no sense in <code>build</code>, or that a value configured during <code>run</code> is too late for a <code>build</code> that already ran. An operation performed in the wrong phase is a run-time failure with a good message, exactly as it is in every UVM. A family of per-phase context types could push some of this to compile time; it would also mean eight signatures for every helper that takes a context, and rustdv declines the trade: the lifecycle is runtime machinery, and the type system is not pretending otherwise.</p>
+<p><strong><code>async fn</code> in a trait is a live edge of Rust.</strong> <code>Component::run</code> is an <code>async fn</code> in a trait, and Rust has not finished smoothing that feature: a trait with an <code>async fn</code> cannot be made into a <code>dyn</code> trait object directly. The framework deals with it by keeping a dyn-safe mirror of the trait internally — machinery you never see and never write, which is why no listing in this book mentions it. A framework author feels that edge so that a testbench author does not.</p>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p><code>uvm_component</code> ported whole. The <code>Component</code> trait carries the nine phases with default no-op bodies — override what you use — and the runner drives them in pyuvm’s order and directions: <code>build</code> top-down, <code>connect</code> bottom-up, run objection-gated, the elaboration and post-run phases top-down (a divergence from the SystemVerilog UVM’s bottom-up, worth checking against old habits). A child is a struct field, <code>Option</code>-wrapped because it does not exist until its parent’s <code>build</code> creates it; the phase walk descends into what <code>build</code> made, deriving every component’s path from field names as it goes. Build and connect are real phases because the gap they occupy — after a component exists, before its children do — is where configuration, factory overrides, and connection all operate; Chapters 25, 29, and 31 each collect on that argument in turn.</p>
+<p>Version 4.0 is next: the machinery of this chapter, put to work on the TinyALU — an environment component, a scoreboard that checks in <code>check</code>, and the BFM delivered through the ConfigDb instead of reached for.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="chapter-23-uvm-test-testbench-3.0.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="chapter-25-uvm-env-testbench-4.0.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="chapter-23-uvm-test-testbench-3.0.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="chapter-25-uvm-env-testbench-4.0.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-09f2665d.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

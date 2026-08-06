@@ -1,0 +1,565 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Transactions - Rust for RTL Verification</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A complete course in Rust and rustdv">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-e96d0476.css">
+        <link rel="stylesheet" href="css/chrome-be44eb3b.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="github-markdown-482a44a1.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-d33968a7.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-113777c1.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Rust for RTL Verification</h1>
+
+                    <div class="right-buttons">
+                        <a href="https://buymeacoffee.com/raysalemi" class="coffee-button" title="Buy me a coffee" aria-label="Buy me a coffee" target="_blank" rel="noopener noreferrer">
+                            <span class="coffee-emoji" aria-hidden="true">&#9749;</span><span class="coffee-label">&nbsp;Buy me a coffee</span>
+                        </a>
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main class="markdown-body">
+                        <h1 id="chapter-35-transactions"><a class="header" href="#chapter-35-transactions">Chapter 35: Transactions</a></h1>
+<p>The 6.0 testbench passes <code>(u8, u8, Ops)</code> tuples, and everyone is tired of remembering that <code>op</code> is the thing at index 2. The UVM’s answer was <code>uvm_object</code>: named-field transaction classes with standard copy, compare, and print machinery. This chapter gives the TinyALU its real transactions, by way of the same warm-up the Python book used — a person with an ID, then a student with a list of grades — because the grades list is what makes copying <em>visible</em>, and three scalars cannot show it.</p>
+<blockquote>
+<p><strong>In the UVM…</strong> we extended <code>uvm_sequence_item</code> and got the machinery of <code>uvm_object</code>: <code>clone()</code> backed by a <code>do_copy()</code> that walked the fields — with the “always call <code>super().do_copy(other)</code> first” discipline; equality backed by <code>do_compare()</code>; printing via <code>convert2string()</code> (<code>__str__()</code> in pyuvm), overridden by hand for every class; plus the long tail — pack, unpack, record — that the specification demands and most testbenches quietly ignore.</p>
+</blockquote>
+<p>Before the first listing, one adjustment of mental furniture, because it decides how every figure below reads. <strong>A rustdv transaction is not an object. It is a location in memory, referred to by a name.</strong> <code>AluCommand { a, b, op }</code> is a layout — three fields side by side — and <code>cmd</code> is a binding to that place. Nothing is wrapped around it, nothing points at it, and it has no identity separate from its bytes. That is why there is no base class in this chapter: there is no object for a base class to be part of. And it is why there is no <code>super()</code>: no inheritance chain means no chain to copy up. What the base class <em>gave</em> you — printing, comparing, copying — arrives instead as traits attached from the outside, which is why they are derives rather than inherited methods. You have known this since Chapter 7; this chapter is the reminder aimed at the UVM habit, which will otherwise keep looking for the object.</p>
+<h2 id="two-string-forms"><a class="header" href="#two-string-forms">Two string forms</a></h2>
+<pre class="playground"><code class="language-rust">// Figure 1: A transaction is a plain struct with two string forms
+
+#[derive(Debug)]
+struct PersonRecord {
+    name: String,
+    id_number: u32,
+}
+
+// `Display` is `convert2string()` / `__str__()`. It is **not** derivable —
+// you write it, because only you know which fields are worth reading.
+impl fmt::Display for PersonRecord {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;'_&gt;) -&gt; fmt::Result {
+        write!(f, "Name: {}, ID: {}", self.name, self.id_number)
+    }
+}
+
+fn main() {
+    let xx = PersonRecord { name: String::from("Joe Shmoe"), id_number: 37 };
+
+    // `{}` asks for Display: the form you chose.
+    println!("Printing the record: {xx}");
+    println!("Logging the record:  {}", xx.to_string());
+
+    // `{:?}` asks for Debug: every field, mechanically, for free.
+    println!("Debug form:          {xx:?}");
+}</code></pre>
+<pre><code class="language-text">--
+Printing the record: Name: Joe Shmoe, ID: 37
+Logging the record:  Name: Joe Shmoe, ID: 37
+Debug form:          PersonRecord { name: "Joe Shmoe", id_number: 37 }
+</code></pre>
+<p>Rust gives a transaction <em>two</em> string forms, and they are different jobs. <code>Debug</code> (<code>{:?}</code>) is the developer field-dump: every field, mechanically formatted, generated free by the derive — the thing you want when debugging the testbench. <code>Display</code> (<code>{}</code>) is <code>convert2string()</code>: the readable form, and it is <em>not derivable</em> — you write it, because only the author knows that a command reads best as operand-operator-operand. Reach for <code>Display</code> in log messages and <code>Debug</code> in despair, and do not confuse the two: the derive cannot write your <code>convert2string()</code> for you, and does not try.</p>
+<h2 id="equality-is-a-decision"><a class="header" href="#equality-is-a-decision">Equality is a decision</a></h2>
+<pre class="playground"><code class="language-rust">// Figure 2: You decide what "the same" means
+
+// `#[derive(PartialEq)]` compares **every field**.
+#[derive(Debug, PartialEq)]
+struct StrictRecord {
+    name: String,
+    id_number: u32,
+}
+
+// But "the same" is a decision, not a fact. Here two records are the same
+// person when the ID matches, whatever the name says.
+#[derive(Debug)]
+struct PersonRecord {
+    name: String,
+    id_number: u32,
+}
+
+impl PartialEq for PersonRecord {
+    fn eq(&amp;self, other: &amp;PersonRecord) -&gt; bool {
+        self.id_number == other.id_number
+    }
+}
+
+// ... (the Display impl from Figure 1, unchanged)
+
+fn main() {
+    println!("-- derived: every field must match --");
+    let a = StrictRecord { name: String::from("Batman"), id_number: 27 };
+    let b = StrictRecord { name: String::from("Bruce Wayne"), id_number: 27 };
+    println!("batman == bruce_wayne? {}", a == b);
+
+    println!("-- written by hand: only the ID counts --");
+    let batman = PersonRecord { name: String::from("Batman"), id_number: 27 };
+    let bruce_wayne = PersonRecord { name: String::from("Bruce Wayne"), id_number: 27 };
+    println!("batman == bruce_wayne? {}", batman == bruce_wayne);
+
+    if batman == bruce_wayne {
+        println!("Batman is really Bruce Wayne!");
+    }
+}</code></pre>
+<pre><code class="language-text">--
+-- derived: every field must match --
+batman == bruce_wayne? false
+-- written by hand: only the ID counts --
+batman == bruce_wayne? true
+Batman is really Bruce Wayne!
+</code></pre>
+<p><code>PartialEq</code> is <code>do_compare()</code>, and it lands in the same two flavors the UVM gives it. Derived, it compares every field — the undemanding default, usually right for a transaction. Written by hand, it encodes a <em>policy</em>: these two records are the same person because only the ID counts, whatever the name field says. The UVM makes you write <code>do_compare()</code> for exactly these cases, and rustdv puts the policy in the same place the UVM does — <strong>on the transaction</strong>. Equality is the data type’s own statement about itself, not something a scoreboard improvises per comparison.</p>
+<h2 id="why-equality-comes-in-two-traits"><a class="header" href="#why-equality-comes-in-two-traits">Why equality comes in two traits</a></h2>
+<pre class="playground"><code class="language-rust">// Figure 3: Why equality comes in two traits
+
+// `PartialEq` promises symmetry and transitivity. It does **not** promise
+// that a == a. That sounds like hair-splitting until you meet a float:
+// IEEE 754 says NaN is equal to nothing, including itself.
+#[derive(Debug, PartialEq)]
+// #[derive(Eq)]  // &lt;-- will not compile: f64 is not Eq
+struct Measurement {
+    delay_ns: f64,
+}
+
+// `Eq` adds the missing promise — every value equals itself — and carries no
+// methods. `HashSet` and `HashMap` require it, because a key that does not
+// equal itself could never be found again.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[repr(u8)]
+enum Ops {
+    Add = 1,
+    And = 2,
+    Xor = 3,
+    Mul = 4,
+}
+
+fn main() {
+    let m = Measurement { delay_ns: f64::NAN };
+    println!("a measured delay is not equal to itself: NaN == NaN? {}", m == m);
+
+    // `Ops` is `Eq`, so it can be a coverage key.
+    let mut seen: HashSet&lt;Ops&gt; = HashSet::new();
+    for op in [Ops::Add, Ops::Mul, Ops::And, Ops::Xor, Ops::Add] {
+        seen.insert(op); // the last one is already in the set
+    }
+    println!("ops seen: {}", seen.len());
+}</code></pre>
+<pre><code class="language-text">--
+a measured delay is not equal to itself: NaN == NaN? false
+ops seen: 4
+</code></pre>
+<p>New material, with a verification-shaped bite. Rust splits equality into two traits because <code>PartialEq</code> does not promise <code>a == a</code> — IEEE 754 forbids it for NaN — while <code>Eq</code> adds that promise and nothing else. Where this catches a verification engineer is the coverage bin: <code>HashSet</code> requires <code>Eq</code>, so a transaction carrying a <em>measured</em> value — a float delay, a sampled analog level — cannot be a coverage key, and the compiler says so at the derive. Uncomment the <code>Eq</code> on <code>Measurement</code> and the error names <code>f64</code> as the reason. The ops enum, all integers underneath, derives <code>Eq</code> and <code>Hash</code> and has been serving as a coverage key since Chapter 18.</p>
+<h2 id="copying-deep-for-what-you-own"><a class="header" href="#copying-deep-for-what-you-own">Copying: deep for what you own</a></h2>
+<pre class="playground"><code class="language-rust">// Figure 4: Clone is deep for what you own
+
+// A student is a person who also owns a list of grades. The `Vec` is the
+// interesting part: it is the field that would make a shallow copy visible.
+#[derive(Debug, Clone)]
+struct StudentRecord {
+    name: String,
+    id_number: u32,
+    grades: Vec&lt;u32&gt;,
+}
+
+impl fmt::Display for StudentRecord {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;'_&gt;) -&gt; fmt::Result {
+        write!(f, "Name: {}, ID: {} Grades: {:?}", self.name, self.id_number, self.grades)
+    }
+}
+
+fn main() {
+    let mary = StudentRecord {
+        name: String::from("Mary"),
+        id_number: 33,
+        grades: vec![97, 82],
+    };
+
+    let mut mary_copy = mary.clone();
+
+    println!("mary:      {mary}");
+    println!("mary_copy: {mary_copy}");
+
+    println!("-- add a grade to the copy --");
+    mary_copy.grades.push(100);
+
+    println!("mary:      {mary}");
+    println!("mary_copy: {mary_copy}");
+}</code></pre>
+<pre><code class="language-text">--
+mary:      Name: Mary, ID: 33 Grades: [97, 82]
+mary_copy: Name: Mary, ID: 33 Grades: [97, 82]
+-- add a grade to the copy --
+mary:      Name: Mary, ID: 33 Grades: [97, 82]
+mary_copy: Name: Mary, ID: 33 Grades: [97, 82, 100]
+</code></pre>
+<p><code>Clone</code> is <code>do_copy()</code>, generated from the field list, and cloning a field you <em>own</em> clones its contents: <code>mary_copy</code> got its own <code>Vec</code>, not a second name for Mary’s, and the pushed grade proves it. Python needs both <code>copy.copy()</code> and <code>copy.deepcopy()</code> because assignment shares references and shallow is the accident you start from. Rust has one <code>clone()</code>, and how deep it goes is already written <em>in the type</em>: owned data is copied. There is no way for figure 4 to have gone the other way — the compiler would not let two records share a <code>Vec</code> without your saying so. Which brings us to how you say so:</p>
+<pre class="playground"><code class="language-rust">// Figure 5: If you want the shallow copy, you ask for it
+
+// Same record, one field changed: the grades now live behind an `Rc`, so a
+// clone copies the *handle* and both records point at one list.
+#[derive(Debug, Clone)]
+struct SharedStudent {
+    name: String,
+    grades: Rc&lt;RefCell&lt;Vec&lt;u32&gt;&gt;&gt;,
+}
+
+fn main() {
+    let mary = SharedStudent {
+        name: String::from("Mary"),
+        grades: Rc::new(RefCell::new(vec![97, 82])),
+    };
+
+    let mary_copy = mary.clone();
+
+    println!(
+        "before: {} {:?} / {} {:?}",
+        mary.name, mary.grades.borrow(), mary_copy.name, mary_copy.grades.borrow()
+    );
+
+    println!("-- add a grade through the copy --");
+    mary_copy.grades.borrow_mut().push(100);
+
+    println!(
+        "after:  {} {:?} / {} {:?}",
+        mary.name, mary.grades.borrow(), mary_copy.name, mary_copy.grades.borrow()
+    );
+
+    println!("handles to the one list: {}", Rc::strong_count(&amp;mary.grades));
+}</code></pre>
+<pre><code class="language-text">--
+before: Mary [97, 82] / Mary [97, 82]
+-- add a grade through the copy --
+after:  Mary [97, 82, 100] / Mary [97, 82, 100]
+handles to the one list: 2
+</code></pre>
+<p>This is Python’s <code>copy.copy()</code> — except that in Python sharing is what you get by default, and here you had to write <code>Rc</code> to ask for it, with <code>RefCell</code> along because shared-and-mutable moves the borrow check to run time (Chapter 13). The deep/shallow decision is settled once, in the type definition, where a reviewer can see it — not at every call site, where the Python book had to warn you about it.</p>
+<h2 id="copy-and-clone-by-their-own-names"><a class="header" href="#copy-and-clone-by-their-own-names">copy() and clone(), by their own names</a></h2>
+<pre class="playground"><code class="language-rust">// Figure 6: clone_from is the UVM's copy(): fill an object you already have
+
+#[derive(Debug, Clone, Default)]
+struct StudentRecord {
+    name: String,
+    id_number: u32,
+    grades: Vec&lt;u32&gt;,
+}
+
+impl fmt::Display for StudentRecord {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;'_&gt;) -&gt; fmt::Result {
+        write!(f, "Name: {}, ID: {} Grades: {:?}", self.name, self.id_number, self.grades)
+    }
+}
+
+fn main() {
+    let mary = StudentRecord {
+        name: String::from("Mary"),
+        id_number: 33,
+        grades: vec![97, 82],
+    };
+
+    // uvm_object.copy(other)  -&gt;  Clone::clone_from(&amp;mut self, source)
+    // uvm_object.clone()      -&gt;  Clone::clone(&amp;self)
+    let mut mary_copy = StudentRecord::default();
+    println!("before: {mary_copy}");
+
+    mary_copy.clone_from(&amp;mary);
+    println!("after:  {mary_copy}");
+
+    println!("-- and clone() is clone(): a new one, returned --");
+    let fresh = mary.clone();
+    println!("fresh:  {fresh}");
+}</code></pre>
+<pre><code class="language-text">--
+before: Name: , ID: 0 Grades: []
+after:  Name: Mary, ID: 33 Grades: [97, 82]
+-- and clone() is clone(): a new one, returned --
+fresh:  Name: Mary, ID: 33 Grades: [97, 82]
+</code></pre>
+<p>The UVM has two copying calls and Rust has the same two, nearly under the same names: <code>copy(other)</code> fills an object you already have, and so does <code>clone_from</code>; <code>clone()</code> hands back a new one in both worlds. What has no counterpart is <code>do_copy()</code> itself, and the discipline that came with it — “always call <code>super().do_copy(other)</code> first,” which the UVM needs because a copy must walk up an inheritance chain. The derive walks the field list instead; there is no first step to forget.</p>
+<p>One false friend before the payoff, because the words collide: Rust’s <code>Copy</code> trait is unrelated to the UVM’s <code>copy()</code>. <code>Copy</code> means “duplicating this is a memcpy and the original stays usable” — it is a statement about ownership, not about transactions, and a transaction owning a <code>String</code> or a <code>Vec</code> cannot be <code>Copy</code> at all. Chapter 31 showed what goes wrong when a <code>Copy</code> stand-in lets the wrong retry loop compile.</p>
+<h2 id="the-tinyalu-transactions-final-form"><a class="header" href="#the-tinyalu-transactions-final-form">The TinyALU transactions, final form</a></h2>
+<pre class="playground"><code class="language-rust">// Figure 7: The TinyALU transactions, final form
+
+// `Eq` and `Hash` because coverage puts an op in a `HashSet` (Figure 3).
+// `Copy` because an op is one byte and copying it is free — the one place in
+// the testbench where `Copy` is the right answer.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[repr(u8)]
+pub enum Ops {
+    Add = 1,
+    And = 2,
+    Xor = 3,
+    Mul = 4,
+}
+
+impl Ops {
+    pub const ALL: [Ops; 4] = [Ops::Add, Ops::And, Ops::Xor, Ops::Mul];
+}
+
+// A command is plain data: no base class, no framework trait, nothing to
+// extend. Not `Copy`: a transaction is something you hand over.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct AluCommand {
+    pub a: u8,
+    pub b: u8,
+    pub op: Ops,
+}
+
+// `Display` is the one you write.
+impl fmt::Display for AluCommand {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;'_&gt;) -&gt; fmt::Result {
+        write!(f, "A: {:02x} {:?} B: {:02x}", self.a, self.op, self.b)
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct AluResult {
+    pub result: u16,
+}
+
+fn main() {
+    let cmd = AluCommand { a: 0xA5, b: 0x75, op: Ops::Mul };
+
+    println!("cmd:        {cmd}");
+    println!("debug:      {cmd:?}");
+
+    let copy = cmd.clone();
+    println!("clone == cmd? {}", copy == cmd);
+
+    let mut tweaked = cmd.clone();
+    tweaked.a = 0;
+    println!("tweaked == cmd? {}", tweaked == cmd);
+
+    let mut covered: HashSet&lt;Ops&gt; = HashSet::new();
+    for op in Ops::ALL {
+        covered.insert(op);
+    }
+    println!("ops covered: {} of {}", covered.len(), Ops::ALL.len());
+
+    let _ = AluResult { result: 0x4B69 };
+}</code></pre>
+<pre><code class="language-text">--
+cmd:        A: a5 Mul B: 75
+debug:      AluCommand { a: 165, b: 117, op: Mul }
+clone == cmd? true
+tweaked == cmd? false
+ops covered: 4 of 4
+</code></pre>
+<p>Everything the chapter covered, applied. These three definitions replace the tuples the testbench has carried since Chapter 19, and they serve every remaining chapter of the book: <code>Ops</code> is <code>Copy</code> because a one-byte op is the testbench’s one honest <code>Copy</code> case, and <code>Eq + Hash</code> because coverage keys demand it; <code>AluCommand</code> is <em>not</em> <code>Copy</code>, because a transaction is something you hand over — the fact <code>finish_item</code> will lean on in the next chapter — and its derived <code>Clone</code>, <code>PartialEq</code>, and <code>Debug</code> are <code>do_copy</code>, <code>do_compare</code>, and the field dump, each regenerating itself whenever you add a field. The one method written by hand is <code>Display</code>, because it always was the one method that needed an author.</p>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>A transaction is a place, not an object: no base class to extend, no identity beyond its bytes, no <code>super()</code> chain to remember. The <code>uvm_object</code> services arrive as traits — <code>Debug</code> free from the derive, <code>Display</code> written by hand because <code>convert2string()</code> always was, <code>PartialEq</code> derived when every field counts and hand-written when “the same” is a policy, <code>Clone</code> deep for owned fields with sharing spelled <code>Rc</code> in the type, and <code>clone_from</code>/<code>clone</code> matching <code>copy()</code>/<code>clone()</code> name for name. <code>Eq</code> is the extra Rust asks so a value can promise it equals itself, and coverage keys are where you will feel it.</p>
+<p>Because a transaction is a place and not a handle, handing one to <code>finish_item</code> will hand over its <em>contents</em> — and the sequence testbench that runs on that rule is next.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="chapter-34-connections-testbench-6.0.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="chapter-36-sequence-testbench-7.0.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="chapter-34-connections-testbench-6.0.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="chapter-36-sequence-testbench-7.0.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-09f2665d.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
